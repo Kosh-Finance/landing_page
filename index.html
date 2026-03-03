@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Kosh — unified, cross-chain, privacy-first finance on Midnight Network. Remittances, payroll, savings circles, credit scoring, spending card, treasury. One app. One identity. Zero exposure."/>
+<title>Kosh — Unified Cross-Chain Finance</title>
+<link rel="preconnect" href="https://api.fontshare.com"/>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* === RESET === */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+img,svg{display:block}
+button{font-family:inherit}
+
+/* === TOKENS === */
+:root{
+  --bg:#06070B;
+  --bg2:#0A0B10;
+  --bg-card:rgba(255,255,255,0.03);
+  --bg-card-h:rgba(255,255,255,0.05);
+  --border:rgba(255,255,255,0.08);
+  --border-h:rgba(139,92,246,0.4);
+  --v:#8B5CF6;
+  --v-dim:rgba(139,92,246,0.14);
+  --v-glow:rgba(139,92,246,0.28);
+  --c:#06B6D4;
+  --c-dim:rgba(6,182,212,0.14);
+  --a:#F59E0B;
+  --a-dim:rgba(245,158,11,0.12);
+  --red:#EF4444;
+  --red-dim:rgba(239,68,68,0.09);
+  --green:#22C55E;
+  --t1:#F8FAFC;
+  --t2:#CBD5E1;
+  --t3:#94A3B8;
+  --t4:#475569;
+  --fd:'Satoshi',system-ui,sans-serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+  --r:16px;
+  --rs:8px;
+  --rl:24px;
+  --rp:999px;
+  --ease:0.25s cubic-bezier(.4,0,.2,1);
+  --ease-slow:0.65s cubic-bezier(.4,0,.2,1);
+}
+
+/* === BASE === */
+body{background:var(--bg);color:var(--t1);font-family:var(--fd);font-size:16px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* === NOISE === */
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.032;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat:repeat}
+
+/* === LAYOUT === */
+.wrap{width:100%;max-width:1280px;margin:0 auto;padding:0 24px}
+@media(min-width:768px){.wrap{padding:0 48px}}
+@media(min-width:1280px){.wrap{padding:0 80px}}
+
+/* === TYPE === */
+.grad{background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-v{background:linear-gradient(135deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mono{font-family:var(--fm)}
+.muted{color:var(--t3)}
+
+/* === BUTTONS === */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:var(--rp);font-family:var(--fd);font-weight:700;font-size:15px;text-decoration:none;cursor:pointer;border:none;transition:all var(--ease);white-space:nowrap;line-height:1}
+.btn-p{background:var(--v);color:#fff}
+.btn-p:hover{background:#7C3AED;transform:translateY(-1px);box-shadow:0 8px 28px rgba(139,92,246,.45)}
+.btn-g{background:transparent;color:var(--t3);border:1px solid var(--border)}
+.btn-g:hover{color:var(--t1);border-color:var(--border-h)}
+.btn-sm{padding:8px 18px;font-size:14px}
+
+/* === BADGES === */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:var(--rp);font-size:11px;font-family:var(--fm);font-weight:500}
+.bv{background:var(--v-dim);color:var(--v);border:1px solid rgba(139,92,246,.22)}
+.bc{background:var(--c-dim);color:var(--c);border:1px solid rgba(6,182,212,.22)}
+.ba{background:var(--a-dim);color:var(--a);border:1px solid rgba(245,158,11,.22)}
+.bg{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.22)}
+
+/* === REVEAL === */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* === NAV === */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background var(--ease),border-color var(--ease);border-bottom:1px solid transparent}
+#nav.scrolled{background:rgba(6,7,11,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:var(--border)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:24px;height:68px;padding:0 32px;max-width:1280px;margin:0 auto}
+.nav-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
+.nav-links{display:none;list-style:none;gap:4px;flex:1;justify-content:center}
+@media(min-width:768px){.nav-links{display:flex}.nav-cta{display:inline-flex!important}.nav-burger{display:none!important}}
+.nav-links a{text-decoration:none;color:var(--t3);font-size:14px;font-weight:500;padding:6px 14px;border-radius:var(--rp);transition:color var(--ease),background var(--ease)}
+.nav-links a:hover{color:var(--t1);background:rgba(255,255,255,.06)}
+.nav-cta{display:none!important}
+.nav-burger{display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px}
+.nav-burger span{display:block;width:22px;height:2px;background:var(--t3);border-radius:2px;transition:transform var(--ease),opacity var(--ease)}
+#nav.open .nav-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#nav.open .nav-burger span:nth-child(2){opacity:0}
+#nav.open .nav-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-mob{display:none;flex-direction:column;background:rgba(6,7,11,.96);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:16px 32px 28px;gap:4px}
+#nav.open .nav-mob{display:flex}
+.nav-mob a{text-decoration:none;color:var(--t2);font-size:16px;font-weight:500;padding:12px 0;border-bottom:1px solid var(--border)}
+.nav-mob a:last-of-type{border:none}
+.nav-mob .btn{margin-top:12px}
+
+/* === HERO === */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden}
+.hero-glow1{position:absolute;top:-160px;right:-80px;width:760px;height:760px;background:radial-gradient(ellipse,rgba(139,92,246,.17) 0%,transparent 68%);border-radius:50%;pointer-events:none;z-index:0}
+.hero-glow2{position:absolute;bottom:-120px;left:-160px;width:600px;height:600px;background:radial-gradient(ellipse,rgba(6,182,212,.11) 0%,transparent 68%);border-radius:50%;pointer-events:none;z-index:0}
+.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:56px;align-items:center}
+@media(min-width:1024px){.hero-in{grid-template-columns:1fr 1fr;gap:72px}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;color:var(--c);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;padding:5px 14px;border:1px solid rgba(6,182,212,.2);border-radius:var(--rp);background:rgba(6,182,212,.05)}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--c);flex-shrink:0;animation:pdot 2s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.hero-h1{font-size:clamp(38px,7vw,82px);font-weight:900;line-height:1.0;letter-spacing:-.03em;margin-bottom:20px}
+.hero-h1 .line2{display:block;margin-top:6px}
+.strike{text-decoration:line-through;text-decoration-color:rgba(239,68,68,.7);text-decoration-thickness:3px}
+.hero-prob{font-size:clamp(16px,1.9vw,19px);color:var(--t3);line-height:1.68;margin-bottom:18px}
+.hero-turn{font-size:clamp(17px,2.1vw,21px);color:var(--t2);line-height:1.55;margin-bottom:10px}
+.hero-turn em{font-style:normal;font-weight:700;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-mods{font-family:var(--fm);font-size:12px;color:var(--t4);margin-bottom:36px;letter-spacing:.02em;line-height:1.8}
+.email-form{display:flex;gap:8px;flex-wrap:wrap}
+.email-form input{flex:1;min-width:210px;padding:12px 20px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--rp);color:var(--t1);font-family:var(--fd);font-size:15px;outline:none;transition:border-color var(--ease),background var(--ease)}
+.email-form input::placeholder{color:var(--t4)}
+.email-form input:focus{border-color:var(--v);background:rgba(139,92,246,.05)}
+.form-ok{font-size:14px;color:var(--green);font-family:var(--fm);padding:12px 0;display:none}
+.cta-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+
+/* === HERO VISUAL === */
+.hero-vis{display:none;position:relative;height:480px}
+@media(min-width:1024px){.hero-vis{display:block}}
+.hero-vis-inner{position:relative;width:100%;height:100%}
+.shard{position:absolute;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:13px 16px;display:flex;flex-direction:column;gap:5px;transition:transform 1.3s cubic-bezier(.4,0,.2,1),opacity 1.3s ease;backdrop-filter:blur(6px)}
+.shard-icon{font-size:18px}
+.shard-name{font-weight:700;color:var(--t2);font-size:11px}
+.shard-data{font-family:var(--fm);color:var(--t4);font-size:10px}
+.s1{top:4%;left:4%;transform:rotate(-5deg)}
+.s2{top:6%;right:8%;transform:rotate(4deg)}
+.s3{top:34%;left:1%;transform:rotate(3deg)}
+.s4{top:58%;left:12%;transform:rotate(-4deg)}
+.s5{top:62%;right:6%;transform:rotate(5deg)}
+.s6{top:28%;right:3%;transform:rotate(-3deg)}
+.hero-vis.unified .shard{transform:translate(130px,40px) scale(.35)!important;opacity:0}
+.kosh-hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:14px}
+.kosh-orb{width:96px;height:96px;background:linear-gradient(135deg,var(--v),var(--c));border-radius:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(139,92,246,.3);transition:box-shadow 1.3s ease,transform 1.3s ease}
+.hero-vis.unified .kosh-orb{box-shadow:0 0 80px rgba(139,92,246,.65),0 0 160px rgba(139,92,246,.25);transform:scale(1.08)}
+.kosh-orb-label{font-family:var(--fm);font-size:11px;color:var(--t4);letter-spacing:.05em;text-align:center}
+.hub-lines{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1s ease .7s}
+.hero-vis.unified .hub-lines{opacity:1}
+
+/* === SECTIONS === */
+.sec{padding:110px 0;position:relative}
+.sec-sm{padding:72px 0;position:relative}
+.sec-label{font-family:var(--fm);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--t4);margin-bottom:10px}
+.sec-h{font-size:clamp(30px,4.8vw,54px);font-weight:900;line-height:1.1;letter-spacing:-.025em;margin-bottom:14px}
+.sec-sub{font-size:clamp(16px,1.9vw,19px);color:var(--t3);max-width:580px;line-height:1.68;margin-bottom:52px}
+
+/* === PROBLEM === */
+#problem{background:linear-gradient(180deg,transparent 0%,rgba(239,68,68,.025) 50%,transparent 100%)}
+.pain-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.pain-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1024px){.pain-grid{grid-template-columns:repeat(3,1fr) /* last item spans 3? No, 7 items = 3+3+1 */}}
+.pain-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:12px;transition:transform var(--ease),border-color var(--ease),background var(--ease);cursor:default}
+.pain-card:hover{transform:translateY(-3px);border-color:rgba(239,68,68,.3);background:var(--bg-card-h)}
+.pain-task{font-size:15px;font-weight:700;color:var(--t1)}
+.pain-tools{display:flex;gap:5px;flex-wrap:wrap}
+.tool-tag{font-family:var(--fm);font-size:10px;background:rgba(255,255,255,.05);color:var(--t3);padding:2px 9px;border-radius:var(--rp);border:1px solid rgba(255,255,255,.07)}
+.pain-cost{display:flex;gap:9px;align-items:flex-start;background:var(--red-dim);border-left:3px solid rgba(239,68,68,.45);padding:9px 13px;border-radius:0 var(--rs) var(--rs) 0;font-size:12px;color:rgba(239,100,100,.95);line-height:1.5}
+.pain-x{font-size:13px;flex-shrink:0;margin-top:1px}
+.prob-trans{text-align:center;max-width:700px;margin:52px auto 0;font-size:clamp(18px,2.4vw,23px);line-height:1.55;color:var(--t2);font-style:italic}
+.prob-trans em{font-style:normal;font-weight:700;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* === MODULES === */
+#modules{overflow:hidden}
+.mods-intro{text-align:center;margin-bottom:72px}
+.mods-intro .sec-sub{margin:0 auto}
+.mod{display:grid;grid-template-columns:1fr;gap:44px;align-items:center;margin-bottom:96px;padding-bottom:96px;border-bottom:1px solid var(--border)}
+.mod:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+@media(min-width:1024px){.mod{grid-template-columns:1fr 1fr;gap:80px}.mod.rev .mod-text{order:2}.mod.rev .mod-vis{order:1}}
+.mod.full{grid-template-columns:1fr;text-align:center}
+.mod.full .mod-text{max-width:640px;margin:0 auto}
+.mod-num{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;opacity:.85}
+.mod-tag{font-size:clamp(24px,3.2vw,36px);font-weight:900;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+.mod-desc{font-size:16px;color:var(--t3);line-height:1.72;margin-bottom:22px}
+.mod-vis{display:flex;justify-content:center;align-items:center}
+
+/* === PHONE MOCKUP === */
+.phone{width:min(272px,90vw);border:1.5px solid rgba(255,255,255,.11);border-radius:36px;background:#0C0D13;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04),0 0 44px rgba(139,92,246,.09);position:relative}
+.ph-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 6px;font-size:10px;font-family:var(--fm);color:var(--t4)}
+.ph-cam{width:8px;height:8px;background:rgba(255,255,255,.14);border-radius:50%}
+.ph-scr{padding:14px}
+.ph-hdr{display:flex;align-items:center;gap:9px;margin-bottom:18px;font-size:13px;font-weight:700;color:var(--t1)}
+.ph-back{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3);flex-shrink:0}
+.recip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:11px 13px;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.rec-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.rec-n{font-size:12px;font-weight:600;color:var(--t1)}
+.rec-m{font-size:9px;color:var(--t4);font-family:var(--fm)}
+.amt-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:11px 13px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.amt-val{font-size:20px;font-weight:900;color:var(--t1)}
+.amt-cur{font-size:10px;color:var(--t3);font-family:var(--fm);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:var(--rp)}
+.sh-row{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.ph-btn{width:100%;padding:12px;border-radius:13px;font-weight:700;font-size:13px;text-align:center;font-family:var(--fd);border:none;cursor:default;color:white}
+.ph-btn-v{background:linear-gradient(135deg,#8B5CF6,#7C3AED)}
+.ph-btn-c{background:linear-gradient(135deg,#06B6D4,#0891B2)}
+
+/* === DASHBOARD MOCKUP === */
+.dash{width:min(420px,100%);background:#0C0D13;border:1.5px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.6),0 0 40px rgba(6,182,212,.07)}
+.dash-hdr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.dash-tit{font-weight:700;font-size:13px;color:var(--t1)}
+.dash-act{font-size:11px;font-family:var(--fm);color:var(--c);cursor:default}
+.dash-body{padding:14px}
+.pr-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pr-row:last-of-type{border-bottom:none}
+.pr-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:white}
+.pr-name{flex:1;font-size:12px;color:var(--t2);font-weight:500}
+.pr-amt{font-size:11px;font-family:var(--fm);color:var(--t4);letter-spacing:.04em}
+.dash-tot{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid rgba(255,255,255,.07);background:rgba(6,182,212,.03)}
+.dash-tot-l{font-size:11px;color:var(--t3);font-family:var(--fm)}
+.dash-tot-v{font-size:14px;font-weight:700;color:var(--t1)}
+.dash-run{margin:0 18px 18px;padding:11px;border-radius:12px;background:linear-gradient(135deg,#06B6D4,#0891B2);color:white;font-weight:700;font-size:12px;text-align:center;font-family:var(--fd);cursor:default}
+
+/* === CIRCLE MOCKUP === */
+.circle-box{width:min(352px,100%);background:#0C0D13;border:1.5px solid rgba(245,158,11,.2);border-radius:20px;padding:22px;box-shadow:0 22px 60px rgba(0,0,0,.6),0 0 40px rgba(245,158,11,.05);margin:0 auto}
+.cb-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.cb-name{font-weight:700;font-size:14px;color:var(--t1)}
+.cb-avs{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:18px}
+.cb-m{display:flex;flex-direction:column;align-items:center;gap:3px}
+.cb-av{width:34px;height:34px;border-radius:50%}
+.cb-av.paid{border:2px solid rgba(34,197,94,.55)}
+.cb-av.pend{border:2px solid rgba(255,255,255,.1)}
+.cb-dot{font-size:8px;font-family:var(--fm);color:var(--t4)}
+.cb-pool{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:12px;padding:13px;text-align:center;margin-bottom:12px}
+.cb-pl{font-size:9px;font-family:var(--fm);color:var(--t4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.cb-pa{font-size:22px;font-weight:900;color:var(--a)}
+.cb-prog-l{display:flex;justify-content:space-between;font-size:10px;font-family:var(--fm);color:var(--t4);margin-bottom:5px}
+.cb-prog{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin-bottom:12px}
+.cb-prog-f{height:100%;background:linear-gradient(90deg,var(--a),#F97316);border-radius:4px;width:40%}
+.cb-turn{font-size:11px;font-family:var(--fm);color:var(--a);text-align:center;padding:7px;background:rgba(245,158,11,.07);border-radius:var(--rs)}
+
+/* === GAUGE MOCKUP === */
+.gauge-card{width:min(310px,100%);background:#0C0D13;border:1.5px solid rgba(139,92,246,.2);border-radius:20px;padding:26px 22px 22px;box-shadow:0 22px 60px rgba(0,0,0,.6),0 0 40px rgba(139,92,246,.07)}
+.gc-tit{font-size:11px;font-family:var(--fm);color:var(--t4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;text-align:center}
+.gauge-wrap{position:relative;width:200px;margin:0 auto 18px}
+.gauge-arc{width:200px;height:100px;border-radius:200px 200px 0 0;background:conic-gradient(from 180deg at 50% 100%,#EF4444 0deg 36deg,#F59E0B 36deg 72deg,#EAB308 72deg 108deg,#22C55E 108deg 144deg,#8B5CF6 144deg 180deg,transparent 180deg);overflow:hidden;position:relative}
+.gauge-cut{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:148px;height:74px;background:#0C0D13;border-radius:148px 148px 0 0}
+.gauge-tier{text-align:center;margin-bottom:18px}
+.gauge-lbl{font-size:26px;font-weight:900;margin-bottom:3px}
+.gauge-sc{font-family:var(--fm);font-size:12px;color:var(--t4);letter-spacing:.1em}
+.gauge-proof{display:flex;align-items:center;gap:7px;background:var(--v-dim);border:1px solid rgba(139,92,246,.2);border-radius:var(--rs);padding:9px 13px;font-size:11px;font-family:var(--fm);color:var(--v);margin-bottom:9px}
+.gauge-val{font-size:10px;font-family:var(--fm);color:var(--t4);text-align:center}
+
+/* === TREASURY MOCKUP === */
+.treasury{width:min(372px,100%);background:#09090E;border:1.5px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.8),0 0 40px rgba(245,158,11,.04)}
+.tr-hdr{padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.tr-pid{font-family:var(--fm);font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.tr-ptit{font-size:13px;font-weight:600;color:var(--t1);line-height:1.4}
+.tr-amt{font-family:var(--fm);font-size:10px;color:var(--a);margin-top:3px}
+.tr-sigs{padding:14px 18px;display:flex;flex-direction:column;gap:6px}
+.sig-row{display:flex;align-items:center;gap:9px;padding:7px 11px;background:rgba(255,255,255,.02);border-radius:var(--rs);font-size:11px;font-family:var(--fm)}
+.sig-id{flex:1;color:var(--t4)}
+.sig-ok{color:var(--green)}
+.sig-pd{color:var(--t4)}
+.tr-quo{margin:0 18px 14px;padding:11px 15px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.18);border-radius:10px;display:flex;align-items:center;justify-content:space-between}
+.quo-l{font-size:12px;font-weight:700;color:var(--green)}
+.tr-foot{padding:11px 18px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:7px;font-size:10px;font-family:var(--fm);color:var(--t4)}
+
+/* === KOSH CARD MOCKUP === */
+.card-scene{display:flex;justify-content:center;align-items:center;gap:32px;flex-wrap:wrap}
+.card-3d{width:min(340px,90vw);aspect-ratio:1.586;border-radius:20px;background:linear-gradient(135deg,#1a0840 0%,#0d1438 45%,#061420 100%);position:relative;transform:perspective(1000px) rotateX(9deg) rotateY(-18deg);box-shadow:0 56px 120px rgba(0,0,0,.8),0 18px 40px rgba(139,92,246,.22),0 0 0 1px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.13);overflow:hidden;transition:transform .5s cubic-bezier(.4,0,.2,1),box-shadow .5s ease;cursor:default}
+.card-3d:hover{transform:perspective(1000px) rotateX(4deg) rotateY(-9deg) scale(1.03);box-shadow:0 80px 160px rgba(0,0,0,.85),0 30px 60px rgba(139,92,246,.3),0 0 0 1px rgba(255,255,255,.1)}
+.card-3d::after{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,#8B5CF6,#06B6D4);z-index:10}
+.card-shim{position:absolute;inset:0;background:linear-gradient(120deg,rgba(139,92,246,.22) 0%,rgba(6,182,212,.16) 22%,rgba(255,255,255,.03) 44%,rgba(139,92,246,.1) 66%,rgba(6,182,212,.2) 88%,rgba(139,92,246,.1) 100%);animation:shim 4.5s ease-in-out infinite}
+@keyframes shim{0%,100%{opacity:.7;transform:translateX(0) translateY(0)}50%{opacity:1;transform:translateX(4px) translateY(-2px)}}
+.card-in{position:relative;z-index:1;padding:20px 22px 18px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start}
+.card-chip{width:40px;height:30px;background:linear-gradient(135deg,#e5c05a 0%,#c8902a 60%,#e5c05a 100%);border-radius:5px;border:1px solid rgba(255,255,255,.28);position:relative;overflow:hidden}
+.card-chip::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:20px;border:1px solid rgba(0,0,0,.18);border-radius:3px}
+.card-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--v),var(--c));border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:white;font-family:var(--fd)}
+.card-num{font-family:var(--fm);font-size:14px;color:rgba(255,255,255,.72);letter-spacing:.22em;margin:4px 0}
+.card-bot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.card-fl{display:flex;flex-direction:column}
+.card-lbl{font-size:7px;font-family:var(--fm);color:rgba(255,255,255,.38);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.card-nm{font-size:11px;font-family:var(--fm);color:rgba(255,255,255,.78);letter-spacing:.07em;text-transform:uppercase}
+.card-exp{font-size:12px;font-family:var(--fm);color:rgba(255,255,255,.78)}
+.card-net{display:flex;position:relative;width:38px;height:24px;align-items:center}
+.mc-l{position:absolute;left:0;width:24px;height:24px;border-radius:50%;background:rgba(235,0,27,.75)}
+.mc-r{position:absolute;right:0;width:24px;height:24px;border-radius:50%;background:rgba(255,163,0,.75);mix-blend-mode:screen}
+/* Card wallet screen */
+.card-wallet{display:none}
+@media(min-width:640px){.card-wallet{display:block}}
+.cw-phone{width:200px;border:1.5px solid rgba(255,255,255,.1);border-radius:28px;background:#0C0D13;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6);transform:perspective(800px) rotateY(12deg)}
+.cw-bar{padding:10px 13px 6px;display:flex;justify-content:space-between;font-size:9px;font-family:var(--fm);color:var(--t4)}
+.cw-scr{padding:12px}
+.cw-hdr{font-weight:700;font-size:12px;color:var(--t1);margin-bottom:3px}
+.cw-bal{font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:14px;display:flex;align-items:center;gap:5px}
+.cw-tx-l{font-size:9px;font-family:var(--fm);color:var(--t4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.cw-tx{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.cw-tx:last-child{border-bottom:none}
+.cw-mer{color:var(--t2);font-weight:500}
+.cw-am{font-family:var(--fm);color:var(--t4);font-size:10px}
+
+/* === HUB SPOKE === */
+.identity-svg{width:100%;max-width:620px;margin:36px auto 0;display:block}
+.spoke-line{stroke-dasharray:7 4;stroke-dashoffset:0;animation:dashes 2.5s linear infinite}
+@keyframes dashes{to{stroke-dashoffset:-44}}
+
+/* === HOW IT WORKS === */
+#how{background:linear-gradient(180deg,transparent,rgba(139,92,246,.025) 50%,transparent)}
+.steps{display:flex;flex-direction:column;gap:0}
+@media(min-width:768px){.steps{flex-direction:row;align-items:flex-start}}
+.step{flex:1;padding:24px}
+@media(min-width:768px){.step{padding:32px}}
+.step-num{font-family:var(--fm);font-size:clamp(44px,5.5vw,68px);font-weight:900;line-height:1;margin-bottom:14px;background:linear-gradient(135deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.step h3{font-size:clamp(18px,2.2vw,22px);font-weight:700;margin-bottom:10px;color:var(--t1)}
+.step p{font-size:14px;color:var(--t3);line-height:1.72}
+.step-conn{display:none;align-self:stretch;align-items:flex-start;padding-top:60px;flex-shrink:0;width:40px;justify-content:center}
+@media(min-width:768px){.step-conn{display:flex}}
+.step-conn-line{width:100%;height:2px;background:linear-gradient(90deg,var(--border),var(--v-glow),var(--border));margin-top:4px}
+
+/* === CHAINS === */
+#chains{background:linear-gradient(180deg,transparent,rgba(139,92,246,.025) 50%,transparent)}
+.chains-head{text-align:center;margin-bottom:44px}
+.chains-head .sec-sub{margin:0 auto}
+.marq-out{overflow:hidden;position:relative;mask-image:linear-gradient(90deg,transparent 0%,black 12%,black 88%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,black 12%,black 88%,transparent 100%);padding:14px 0;margin:0 -24px}
+.marq-in{display:flex;gap:14px;width:max-content;animation:scroll 34s linear infinite}
+.marq-out:hover .marq-in{animation-play-state:paused}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.chain{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);min-width:96px;transition:border-color var(--ease),transform var(--ease);cursor:default}
+.chain:hover{border-color:var(--border-h);transform:translateY(-2px)}
+.chain-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:white}
+.chain-nm{font-family:var(--fm);font-size:9px;color:var(--t3);text-align:center;white-space:nowrap}
+
+/* === STATS === */
+#stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,255,255,.01)}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border)}
+@media(min-width:768px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1200px){.stats-grid{grid-template-columns:repeat(6,1fr)}}
+.stat-cell{background:var(--bg);padding:36px 20px;text-align:center}
+.stat-n{font-size:clamp(32px,4.5vw,52px);font-weight:900;line-height:1;letter-spacing:-.03em;margin-bottom:7px;background:linear-gradient(135deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-l{font-family:var(--fm);font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;line-height:1.55}
+
+/* === FAQ === */
+#faq{position:relative}
+.faq-list{display:flex;flex-direction:column;gap:7px;max-width:780px;margin:0 auto}
+.faq-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color var(--ease)}
+.faq-item.open,.faq-item:hover{border-color:var(--border-h)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 22px;background:none;border:none;color:var(--t1);font-family:var(--fd);font-size:15px;font-weight:600;cursor:pointer;text-align:left;transition:color var(--ease)}
+.faq-ic{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--t3);transition:transform var(--ease),background var(--ease),border-color var(--ease);line-height:1}
+.faq-item.open .faq-ic{transform:rotate(45deg);background:var(--v-dim);border-color:rgba(139,92,246,.4);color:var(--v)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1)}
+.faq-item.open .faq-a{max-height:600px}
+.faq-a-in{padding:0 22px 18px;font-size:14px;color:var(--t3);line-height:1.78}
+.faq-a-in p+p{margin-top:9px}
+
+/* === CTA === */
+#cta{text-align:center;position:relative;overflow:hidden}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:560px;height:560px;background:radial-gradient(ellipse,rgba(139,92,246,.14) 0%,transparent 68%);border-radius:50%;pointer-events:none}
+.cta-in{position:relative;z-index:2;max-width:580px;margin:0 auto}
+.cta-in h2{font-size:clamp(32px,4.8vw,58px);font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-bottom:14px}
+.cta-in>p{font-size:17px;color:var(--t3);margin-bottom:34px}
+.cta-in .email-form{justify-content:center}
+
+/* === FOOTER === */
+footer{border-top:1px solid var(--border);padding:36px 0}
+.foot-in{display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center}
+@media(min-width:768px){.foot-in{flex-direction:row;justify-content:space-between;text-align:left}}
+.foot-brand{display:flex;flex-direction:column;gap:7px}
+.foot-copy{font-size:11px;color:var(--t4);font-family:var(--fm)}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+.foot-links a{font-size:12px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color var(--ease)}
+.foot-links a:hover{color:var(--t1)}
+.foot-built{display:flex;align-items:center;gap:7px}
+.mid-badge{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid rgba(139,92,246,.2);border-radius:var(--rp);background:var(--v-dim);color:var(--v);font-size:10px;font-family:var(--fm)}
+
+/* === UTILS === */
+.hidden{display:none!important}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(139,92,246,.4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--v)}
+</style>
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav id="nav" aria-label="Main navigation">
+  <div class="nav-in">
+    <a href="#" class="nav-logo" aria-label="Kosh">
+      <svg height="28" viewBox="0 0 158 38" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8B5CF6"/>
+            <stop offset="100%" stop-color="#06B6D4"/>
+          </linearGradient>
+        </defs>
+        <polygon points="35,19 27,4 11,4 3,19 11,34 27,34" fill="url(#lg1)"/>
+        <text x="19" y="24" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="900" font-size="14" fill="white" letter-spacing="-0.5">K</text>
+        <text x="46" y="26" font-family="Satoshi,system-ui" font-weight="900" font-size="19" fill="#F8FAFC" letter-spacing="2.5">KOSH</text>
+      </svg>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#problem">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#cta" class="btn btn-p btn-sm nav-cta">Get Early Access</a>
+    <button class="nav-burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mob" aria-label="Mobile navigation">
+    <a href="#problem">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#faq">FAQ</a>
+    <a href="#cta" class="btn btn-p" style="justify-content:center">Get Early Access</a>
+  </div>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="hero" class="sec">
+  <div class="hero-glow1" aria-hidden="true"></div>
+  <div class="hero-glow2" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-in">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Built on Midnight Network</div>
+        <h1 class="hero-h1">
+          Your crypto<br>finances are
+          <span class="line2"><span class="strike">scattered</span>.</span>
+        </h1>
+        <p class="hero-prob">Your salary is on Etherscan. Your savings circles run on WhatsApp. Your identity is copied 10 times. And none of it builds credit.</p>
+        <p class="hero-turn">Kosh puts it all in one place. <em>Private by default. Compliant by design.</em></p>
+        <p class="hero-mods mono">Remittances · Payroll · Savings Circles · Credit Scoring · Kosh Card · Treasury<br>One app. One identity. Zero exposure.</p>
+        <form class="email-form" id="hero-form">
+          <input type="email" placeholder="your@email.com" required autocomplete="email"/>
+          <button type="submit" class="btn btn-p">Get Early Access</button>
+        </form>
+        <p class="form-ok" id="hero-ok">✓ You're on the list. We'll be in touch.</p>
+        <div class="cta-row">
+          <a href="#problem" class="btn btn-g">See how it works ↓</a>
+        </div>
+      </div>
+      <div class="hero-vis" id="heroVis" aria-hidden="true">
+        <div class="hero-vis-inner">
+          <div class="shard s1"><span class="shard-icon">💸</span><span class="shard-name">Wise</span><span class="shard-data">Sending ●●●●●</span></div>
+          <div class="shard s2"><span class="shard-icon">📊</span><span class="shard-name">Utopia Labs</span><span class="shard-data">Payroll: public</span></div>
+          <div class="shard s3"><span class="shard-icon">💬</span><span class="shard-name">WhatsApp</span><span class="shard-data">Savings circle</span></div>
+          <div class="shard s4"><span class="shard-icon">🏛</span><span class="shard-name">Gnosis Safe</span><span class="shard-data">Treasury: exposed</span></div>
+          <div class="shard s5"><span class="shard-icon">🪪</span><span class="shard-name">KYC #7</span><span class="shard-data">Identity copy</span></div>
+          <div class="shard s6"><span class="shard-icon">🌐</span><span class="shard-name">Etherscan</span><span class="shard-data">All txns visible</span></div>
+          <div class="kosh-hub">
+            <div class="kosh-orb">
+              <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <text x="26" y="35" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="900" font-size="28" fill="white">K</text>
+              </svg>
+            </div>
+            <span class="kosh-orb-label">kosh.finance</span>
+          </div>
+          <div class="hub-lines">
+            <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+              <line x1="240" y1="240" x2="60" y2="60" stroke="rgba(139,92,246,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+              <line x1="240" y1="240" x2="420" y2="60" stroke="rgba(6,182,212,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+              <line x1="240" y1="240" x2="40" y2="240" stroke="rgba(139,92,246,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+              <line x1="240" y1="240" x2="440" y2="240" stroke="rgba(6,182,212,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+              <line x1="240" y1="240" x2="80" y2="420" stroke="rgba(139,92,246,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+              <line x1="240" y1="240" x2="400" y2="420" stroke="rgba(6,182,212,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem" class="sec">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="sec-label">The fragmentation problem</p>
+      <h2 class="sec-h">The fragmentation tax<br>you pay every day</h2>
+      <p class="sec-sub">Six financial tasks. Six different tools. Six chances for your data to leak. One bill you never see — until you add it up.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal d1">
+        <div class="pain-task">Send money home</div>
+        <div class="pain-tools"><span class="tool-tag">Wise</span><span class="tool-tag">Western Union</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>6.5% fees extracted. Full identity exposed to every intermediary.</div>
+      </div>
+      <div class="pain-card reveal d2">
+        <div class="pain-task">Get paid in crypto</div>
+        <div class="pain-tools"><span class="tool-tag">Utopia Labs</span><span class="tool-tag">Coinshift</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>Your salary is public on-chain. Anyone can see what you earn.</div>
+      </div>
+      <div class="pain-card reveal d3">
+        <div class="pain-task">Save with your community</div>
+        <div class="pain-tools"><span class="tool-tag">WhatsApp</span><span class="tool-tag">Cash envelopes</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>No enforcement, no credit history built. Defaulters walk free.</div>
+      </div>
+      <div class="pain-card reveal d1">
+        <div class="pain-task">Prove creditworthiness</div>
+        <div class="pain-tools"><span class="tool-tag">Nothing exists</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>Show your entire wallet history — or you have no credit at all.</div>
+      </div>
+      <div class="pain-card reveal d2">
+        <div class="pain-task">Manage DAO treasury</div>
+        <div class="pain-tools"><span class="tool-tag">Gnosis Safe</span><span class="tool-tag">Squads</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>Signers doxxed on-chain. Every balance and movement is public.</div>
+      </div>
+      <div class="pain-card reveal d3">
+        <div class="pain-task">Spend crypto at a store</div>
+        <div class="pain-tools"><span class="tool-tag">Gnosis Pay</span><span class="tool-tag">CEX cards</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>Full wallet history linked to your card. Off-ramp through exchange required.</div>
+      </div>
+      <div class="pain-card reveal d2">
+        <div class="pain-task">Verify your identity</div>
+        <div class="pain-tools"><span class="tool-tag">Re-KYC everywhere</span></div>
+        <div class="pain-cost"><span class="pain-x">⚠</span>Your passport uploaded 10 times. Breach risk multiplied 10x.</div>
+      </div>
+    </div>
+    <p class="prob-trans reveal">What if one app handled everything? What if you verified once and it worked everywhere? What if privacy wasn't a feature — <em>it was the architecture?</em></p>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules" class="sec">
+  <div class="wrap">
+    <div class="mods-intro reveal">
+      <p class="sec-label">The solution</p>
+      <h2 class="sec-h">Kosh: All your finance.<br>One place. Zero exposure.</h2>
+      <p class="sec-sub">Seven modules, one ZK identity, every chain. Verify once. Send, earn, save, prove, spend, and govern — without scattering your data across the internet.</p>
+    </div>
+
+    <!-- MODULE 1: SEND -->
+    <div class="mod reveal">
+      <div class="mod-text">
+        <p class="mod-num" style="color:var(--v)">01 — Send</p>
+        <h3 class="mod-tag">Send money home.<br>Keep everything else private.</h3>
+        <p class="mod-desc">Shielded stablecoin transfers where amounts and identities stay hidden from the public chain. Compliance proofs satisfy regulators without exposing personal data to intermediaries.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge bv">🔒 Shielded transfer</span>
+          <span class="badge bc">✓ Compliance proof</span>
+          <span class="badge" style="background:rgba(255,255,255,.04);color:var(--t3);border:1px solid var(--border)">50+ chains</span>
+        </div>
+      </div>
+      <div class="mod-vis">
+        <div class="phone">
+          <div class="ph-bar"><span>9:41</span><div class="ph-cam"></div><span>●●●</span></div>
+          <div class="ph-scr">
+            <div class="ph-hdr"><div class="ph-back">←</div>Send</div>
+            <div class="recip">
+              <div class="rec-av">🇮🇳</div>
+              <div><div class="rec-n">Family — India</div><div class="rec-m">0x7f3a...masked · Mumbai</div></div>
+            </div>
+            <div class="amt-box">
+              <div class="amt-val">500</div>
+              <div class="amt-cur">USDC</div>
+            </div>
+            <div class="sh-row">
+              <span class="badge bv">🔒 Shielded</span>
+              <span class="badge bc">✓ Compliant</span>
+            </div>
+            <div class="ph-btn ph-btn-v">Send Privately</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2: PAY -->
+    <div class="mod rev reveal">
+      <div class="mod-text">
+        <p class="mod-num" style="color:var(--c)">02 — Pay</p>
+        <h3 class="mod-tag">Pay your team.<br>Nobody sees what anyone earns.</h3>
+        <p class="mod-desc">Batch payroll in shielded stablecoins. The chain sees only aggregate totals — never individual amounts. Run payroll for 100 people with one transaction and zero salary exposure.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge bc">⚡ Batch payroll</span>
+          <span class="badge bv">🔒 Amounts hidden</span>
+        </div>
+      </div>
+      <div class="mod-vis">
+        <div class="dash">
+          <div class="dash-hdr"><span class="dash-tit">Run Payroll — March 2026</span><span class="dash-act">+ Add member</span></div>
+          <div class="dash-body">
+            <div class="pr-row"><div class="pr-av" style="background:#7C3AED">A</div><span class="pr-name">Alice K.</span><span class="pr-amt">••••••</span></div>
+            <div class="pr-row"><div class="pr-av" style="background:#0891B2">B</div><span class="pr-name">Bruno M.</span><span class="pr-amt">••••••</span></div>
+            <div class="pr-row"><div class="pr-av" style="background:#059669">C</div><span class="pr-name">Camila R.</span><span class="pr-amt">••••••</span></div>
+            <div class="pr-row"><div class="pr-av" style="background:#D97706">D</div><span class="pr-name">David L.</span><span class="pr-amt">••••••</span></div>
+            <div class="pr-row"><div class="pr-av" style="background:#DC2626">E</div><span class="pr-name">Elena V.</span><span class="pr-amt">••••••</span></div>
+          </div>
+          <div class="dash-tot"><span class="dash-tot-l">Total aggregate</span><span class="dash-tot-v">47,000 USDC</span></div>
+          <div class="dash-run">Execute Shielded Payroll →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 3: SAVE -->
+    <div class="mod full reveal">
+      <div class="mod-text">
+        <p class="mod-num" style="color:var(--a)">03 — Save</p>
+        <h3 class="mod-tag">Savings circles, on-chain.<br>The world's first ZK-ROSCA.</h3>
+        <p class="mod-desc">ROSCAs (chit funds, stokvels, tandas) have served billions of people for centuries — Kosh brings them on-chain with zero-knowledge privacy. Contributions are anonymous. Bid-based payouts are fair. Defaulters are identified without compromising honest members. Every completed circle builds your ZK Credit Score.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:28px">
+          <span class="badge ba">🌍 World's first ZK-ROSCA</span>
+          <span class="badge bv">🔒 Anonymous contributions</span>
+          <span class="badge bc">📈 Builds credit score</span>
+        </div>
+      </div>
+      <div class="mod-vis" style="justify-content:center">
+        <div class="circle-box">
+          <div class="cb-hdr"><span class="cb-name">Mumbai Circle · 10 members</span><span class="badge ba">Active</span></div>
+          <div class="cb-avs">
+            <div class="cb-m"><div class="cb-av paid" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)"></div><span class="cb-dot">✓</span></div>
+            <div class="cb-m"><div class="cb-av paid" style="background:linear-gradient(135deg,#0891B2,#0E7490)"></div><span class="cb-dot">✓</span></div>
+            <div class="cb-m"><div class="cb-av paid" style="background:linear-gradient(135deg,#059669,#047857)"></div><span class="cb-dot">✓</span></div>
+            <div class="cb-m"><div class="cb-av paid" style="background:linear-gradient(135deg,#D97706,#B45309)"></div><span class="cb-dot">✓</span></div>
+            <div class="cb-m"><div class="cb-av pend" style="background:rgba(255,255,255,.06)"></div><span class="cb-dot">…</span></div>
+            <div class="cb-m"><div class="cb-av pend" style="background:rgba(255,255,255,.06)"></div><span class="cb-dot">…</span></div>
+            <div class="cb-m"><div class="cb-av pend" style="background:rgba(255,255,255,.06)"></div><span class="cb-dot">…</span></div>
+            <div class="cb-m"><div class="cb-av pend" style="background:rgba(255,255,255,.06)"></div><span class="cb-dot">…</span></div>
+            <div class="cb-m"><div class="cb-av pend" style="background:rgba(255,255,255,.06)"></div><span class="cb-dot">…</span></div>
+            <div class="cb-m"><div class="cb-av pend" style="background:rgba(255,255,255,.06)"></div><span class="cb-dot">…</span></div>
+          </div>
+          <div class="cb-pool"><div class="cb-pl">Pool this month</div><div class="cb-pa">3,200 USDC</div></div>
+          <div class="cb-prog-l"><span>Month 4 of 10</span><span>40% complete</span></div>
+          <div class="cb-prog"><div class="cb-prog-f"></div></div>
+          <div class="cb-turn">Your turn: Month 7 · ~3,200 USDC payout</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 4: PROVE -->
+    <div class="mod reveal">
+      <div class="mod-text">
+        <p class="mod-num" style="color:var(--v)">04 — Prove</p>
+        <h3 class="mod-tag">Build credit from your financial life.<br>Prove it without showing it.</h3>
+        <p class="mod-desc">Every remittance sent, payroll received, and savings circle completed feeds a private credit score computed in zero-knowledge. Prove "my score is above 700" to any lending protocol — without revealing the number, your income, or your transaction history.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge bv">🔒 ZK proof</span>
+          <span class="badge bc">📊 Informal activity counts</span>
+        </div>
+      </div>
+      <div class="mod-vis">
+        <div class="gauge-card">
+          <div class="gc-tit">ZK Credit Score</div>
+          <div class="gauge-wrap">
+            <div class="gauge-arc"><div class="gauge-cut"></div></div>
+          </div>
+          <div class="gauge-tier">
+            <div class="gauge-lbl grad-v">Excellent</div>
+            <div class="gauge-sc">Score: • • •</div>
+          </div>
+          <div class="gauge-proof">🔒 Verified by ZK proof · kosh.finance</div>
+          <div class="gauge-val">Valid until Dec 2026 · Portable cross-chain</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 5: GOVERN -->
+    <div class="mod rev reveal">
+      <div class="mod-text">
+        <p class="mod-num" style="color:var(--a)">05 — Govern</p>
+        <h3 class="mod-tag">Your treasury. Hidden signers.<br>ZK quorum proofs.</h3>
+        <p class="mod-desc">Multi-sig treasury where signers remain anonymous on-chain. ZK proofs verify that enough authorized people approved a transaction — without revealing who signed, what they hold, or even that they exist.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge ba">👤 Anonymous signers</span>
+          <span class="badge bv">✓ ZK quorum</span>
+        </div>
+      </div>
+      <div class="mod-vis">
+        <div class="treasury">
+          <div class="tr-hdr">
+            <div class="tr-pid">Treasury Proposal #14</div>
+            <div class="tr-ptit">Transfer funds to Q2 Development Budget</div>
+            <div class="tr-amt">50,000 USDC · Midnight Network</div>
+          </div>
+          <div class="tr-sigs">
+            <div class="sig-row"><span class="sig-id">Signer 0x4f2a…[masked]</span><span class="sig-ok">✓ Approved</span></div>
+            <div class="sig-row"><span class="sig-id">Signer 0x8c1b…[masked]</span><span class="sig-ok">✓ Approved</span></div>
+            <div class="sig-row"><span class="sig-id">Signer 0x2e7d…[masked]</span><span class="sig-ok">✓ Approved</span></div>
+            <div class="sig-row"><span class="sig-id">Signer 0x9a3f…[masked]</span><span class="sig-pd">◌ Pending</span></div>
+            <div class="sig-row"><span class="sig-id">Signer 0x5b6c…[masked]</span><span class="sig-pd">◌ Pending</span></div>
+          </div>
+          <div class="tr-quo"><span class="quo-l">3 of 5 approved ✓ Quorum reached</span><span class="badge bg">ZK verified</span></div>
+          <div class="tr-foot">🔒 ZK proof generated · Identities protected · On-chain: aggregate only</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 6: SPEND / KOSH CARD -->
+    <div class="mod full reveal" style="background:rgba(139,92,246,.03);border-radius:var(--rl);padding:56px 48px;border:1px solid rgba(139,92,246,.1);margin-left:-8px;margin-right:-8px">
+      <div class="mod-text" style="max-width:700px">
+        <p class="mod-num" style="color:var(--v)">06 — Spend</p>
+        <h3 class="mod-tag">Spend your crypto. Anywhere. Privately.</h3>
+        <p class="mod-desc">A virtual card that draws from your shielded Kosh balance — stablecoins, savings circle payouts, payroll earnings. Use it at any Visa/Mastercard merchant. Your on-chain history stays private. The merchant gets fiat. You keep your financial life to yourself.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px">
+          <span class="badge bv">🔒 Private off-ramp</span>
+          <span class="badge bc">🌍 Accepted everywhere</span>
+          <span class="badge ba">⚡ Instant conversion</span>
+        </div>
+      </div>
+      <div class="mod-vis" style="justify-content:center;gap:40px;flex-wrap:wrap;align-items:center">
+        <div class="card-scene">
+          <div class="card-3d">
+            <div class="card-shim"></div>
+            <div class="card-in">
+              <div class="card-top">
+                <div class="card-chip"></div>
+                <div class="card-mark">K</div>
+              </div>
+              <div class="card-num">•••• •••• •••• 4782</div>
+              <div class="card-bot">
+                <div class="card-fl">
+                  <div class="card-lbl">Card Holder</div>
+                  <div class="card-nm">KOSH USER</div>
+                </div>
+                <div class="card-fl">
+                  <div class="card-lbl">Expires</div>
+                  <div class="card-exp">12/27</div>
+                </div>
+                <div class="card-net"><div class="mc-l"></div><div class="mc-r"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-wallet">
+            <div class="cw-phone">
+              <div class="cw-bar"><span>9:41</span><span>●●●</span></div>
+              <div class="cw-scr">
+                <div class="cw-hdr">Kosh Card</div>
+                <div class="cw-bal">Balance: <span class="badge bv" style="font-size:9px;padding:1px 7px">Shielded ••••</span></div>
+                <div class="cw-tx-l">Recent</div>
+                <div class="cw-tx"><span class="cw-mer">Amazon</span><span class="cw-am">private</span></div>
+                <div class="cw-tx"><span class="cw-mer">Starbucks</span><span class="cw-am">private</span></div>
+                <div class="cw-tx"><span class="cw-mer">Uber</span><span class="cw-am">private</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 7: IDENTITY -->
+    <div class="mod full reveal">
+      <div class="mod-text">
+        <p class="mod-num" style="color:var(--c)">07 — Identity</p>
+        <h3 class="mod-tag">Verify once.<br>Use everywhere.</h3>
+        <p class="mod-desc">One KYC verification creates a ZK identity — your credentials become a leaf in a Merkle tree, and only the root hash goes on-chain. That single identity unlocks every Kosh module, including your Kosh Card. No more uploading your passport to 10 different apps.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+          <span class="badge bv">🔑 Verify once</span>
+          <span class="badge bc">🌐 Works everywhere</span>
+          <span class="badge" style="background:rgba(255,255,255,.04);color:var(--t3);border:1px solid var(--border)">Merkle tree</span>
+        </div>
+      </div>
+      <div class="mod-vis" style="justify-content:center;width:100%">
+        <svg class="identity-svg" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" aria-label="Identity hub connecting all Kosh modules">
+          <defs>
+            <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(139,92,246,0.35)"/>
+              <stop offset="100%" stop-color="rgba(139,92,246,0)"/>
+            </radialGradient>
+            <linearGradient id="spoke-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+          <!-- Glow behind hub -->
+          <circle cx="300" cy="190" r="72" fill="url(#hub-glow)"/>
+          <!-- Spoke lines -->
+          <line x1="300" y1="190" x2="300" y2="44" stroke="rgba(139,92,246,0.4)" stroke-width="1.5" class="spoke-line"/>
+          <line x1="300" y1="190" x2="478" y2="113" stroke="rgba(6,182,212,0.4)" stroke-width="1.5" class="spoke-line" style="animation-delay:-.4s"/>
+          <line x1="300" y1="190" x2="478" y2="267" stroke="rgba(139,92,246,0.4)" stroke-width="1.5" class="spoke-line" style="animation-delay:-.8s"/>
+          <line x1="300" y1="190" x2="300" y2="336" stroke="rgba(6,182,212,0.4)" stroke-width="1.5" class="spoke-line" style="animation-delay:-1.2s"/>
+          <line x1="300" y1="190" x2="122" y2="267" stroke="rgba(139,92,246,0.4)" stroke-width="1.5" class="spoke-line" style="animation-delay:-1.6s"/>
+          <line x1="300" y1="190" x2="122" y2="113" stroke="rgba(6,182,212,0.4)" stroke-width="1.5" class="spoke-line" style="animation-delay:-2s"/>
+          <!-- Hub circle -->
+          <circle cx="300" cy="190" r="46" fill="rgba(139,92,246,0.12)" stroke="#8B5CF6" stroke-width="1.5"/>
+          <text x="300" y="187" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="900" font-size="13" fill="#F8FAFC">ZK</text>
+          <text x="300" y="202" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="11" fill="#94A3B8">Identity</text>
+          <!-- Spoke nodes -->
+          <circle cx="300" cy="44" r="30" fill="rgba(139,92,246,0.1)" stroke="rgba(139,92,246,0.4)" stroke-width="1"/>
+          <text x="300" y="40" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="10" fill="#F8FAFC">Send</text>
+          <text x="300" y="53" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#22C55E">✓</text>
+
+          <circle cx="478" cy="113" r="30" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.4)" stroke-width="1"/>
+          <text x="478" y="109" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="10" fill="#F8FAFC">Pay</text>
+          <text x="478" y="122" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#22C55E">✓</text>
+
+          <circle cx="478" cy="267" r="30" fill="rgba(139,92,246,0.1)" stroke="rgba(139,92,246,0.4)" stroke-width="1"/>
+          <text x="478" y="263" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="10" fill="#F8FAFC">Save</text>
+          <text x="478" y="276" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#22C55E">✓</text>
+
+          <circle cx="300" cy="336" r="30" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.4)" stroke-width="1"/>
+          <text x="300" y="332" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="10" fill="#F8FAFC">Prove</text>
+          <text x="300" y="345" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#22C55E">✓</text>
+
+          <circle cx="122" cy="267" r="30" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+          <text x="122" y="263" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="10" fill="#F8FAFC">Spend</text>
+          <text x="122" y="276" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#22C55E">✓</text>
+
+          <circle cx="122" cy="113" r="30" fill="rgba(139,92,246,0.1)" stroke="rgba(139,92,246,0.4)" stroke-width="1"/>
+          <text x="122" y="109" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="700" font-size="10" fill="#F8FAFC">Govern</text>
+          <text x="122" y="122" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#22C55E">✓</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="sec">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;margin-bottom:56px">
+      <p class="sec-label">How it works</p>
+      <h2 class="sec-h">Three steps. Then you're free.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Verify once</h3>
+        <p>Complete KYC with a partner provider. Your credentials become a leaf in a Merkle tree. Only the root hash goes on-chain — your actual data never leaves your device.</p>
+      </div>
+      <div class="step-conn" aria-hidden="true"><div class="step-conn-line"></div></div>
+      <div class="step reveal d2">
+        <div class="step-num">02</div>
+        <h3>Use any module</h3>
+        <p>Send money, get paid, join savings circles, spend with your Kosh Card, manage treasury. One identity unlocks everything. Every action is private by default.</p>
+      </div>
+      <div class="step-conn" aria-hidden="true"><div class="step-conn-line"></div></div>
+      <div class="step reveal d4">
+        <div class="step-num">03</div>
+        <h3>Build reputation</h3>
+        <p>Every action feeds your ZK Credit Score. Prove creditworthiness without revealing history. Portable across the entire Midnight ecosystem and beyond.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAINS -->
+<section id="chains" class="sec-sm">
+  <div class="wrap">
+    <div class="chains-head reveal">
+      <p class="sec-label">Cross-chain support</p>
+      <h2 class="sec-h">Built on Midnight.<br>Connected to everything.</h2>
+      <p class="sec-sub">Kosh is built natively on Midnight Network, which provides zero-knowledge privacy at the protocol level. Through LayerZero integration, Kosh connects to 50+ blockchains — send from Ethereum, receive on Solana, nothing leaks on any chain. Cardano serves as the settlement layer.</p>
+    </div>
+  </div>
+  <div class="marq-out" aria-label="Supported blockchain networks">
+    <div class="marq-in" id="marquee">
+      <!-- Set 1 -->
+      <div class="chain"><div class="chain-ic" style="background:linear-gradient(135deg,#8B5CF6,#5B21B6)"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="13" fill="white">M</text></svg></div><span class="chain-nm">Midnight</span></div>
+      <div class="chain"><div class="chain-ic" style="background:linear-gradient(135deg,#0D85E8,#0A6BC0)"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,18 2,18" fill="none" stroke="white" stroke-width="2"/></svg></div><span class="chain-nm">Cardano</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#627EEA"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 18,9 11,12 4,9" fill="white" opacity=".7"/><polygon points="11,14 18,9 11,20" fill="white" opacity=".9"/><polygon points="11,14 4,9 11,20" fill="white" opacity=".7"/></svg></div><span class="chain-nm">Ethereum</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#12AAFF"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="10" fill="white">ARB</text></svg></div><span class="chain-nm">Arbitrum</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#8247E5"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,11 11,20 2,11" fill="white" opacity=".85"/></svg></div><span class="chain-nm">Polygon</span></div>
+      <div class="chain"><div class="chain-ic" style="background:linear-gradient(135deg,#9945FF,#14F195)"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,11 11,20 2,11" fill="white" opacity=".9"/></svg></div><span class="chain-nm">Solana</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#0052FF"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="13" fill="white">B</text></svg></div><span class="chain-nm">Base</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#E84142"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 21,20 1,20" fill="none" stroke="white" stroke-width="2.5"/><line x1="11" y1="10" x2="11" y2="16" stroke="white" stroke-width="2"/></svg></div><span class="chain-nm">Avalanche</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#F3BA2F"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="9" fill="#1a1a1a">BNB</text></svg></div><span class="chain-nm">BNB Chain</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#FF0420"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="10" fill="white">OP</text></svg></div><span class="chain-nm">Optimism</span></div>
+      <!-- Set 2 (duplicate for seamless scroll) -->
+      <div class="chain"><div class="chain-ic" style="background:linear-gradient(135deg,#8B5CF6,#5B21B6)"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="13" fill="white">M</text></svg></div><span class="chain-nm">Midnight</span></div>
+      <div class="chain"><div class="chain-ic" style="background:linear-gradient(135deg,#0D85E8,#0A6BC0)"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,18 2,18" fill="none" stroke="white" stroke-width="2"/></svg></div><span class="chain-nm">Cardano</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#627EEA"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 18,9 11,12 4,9" fill="white" opacity=".7"/><polygon points="11,14 18,9 11,20" fill="white" opacity=".9"/><polygon points="11,14 4,9 11,20" fill="white" opacity=".7"/></svg></div><span class="chain-nm">Ethereum</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#12AAFF"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="10" fill="white">ARB</text></svg></div><span class="chain-nm">Arbitrum</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#8247E5"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,11 11,20 2,11" fill="white" opacity=".85"/></svg></div><span class="chain-nm">Polygon</span></div>
+      <div class="chain"><div class="chain-ic" style="background:linear-gradient(135deg,#9945FF,#14F195)"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,11 11,20 2,11" fill="white" opacity=".9"/></svg></div><span class="chain-nm">Solana</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#0052FF"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="13" fill="white">B</text></svg></div><span class="chain-nm">Base</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#E84142"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 21,20 1,20" fill="none" stroke="white" stroke-width="2.5"/><line x1="11" y1="10" x2="11" y2="16" stroke="white" stroke-width="2"/></svg></div><span class="chain-nm">Avalanche</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#F3BA2F"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="9" fill="#1a1a1a">BNB</text></svg></div><span class="chain-nm">BNB Chain</span></div>
+      <div class="chain"><div class="chain-ic" style="background:#FF0420"><svg width="22" height="22" viewBox="0 0 22 22"><text x="11" y="15" text-anchor="middle" font-family="Satoshi,sans-serif" font-weight="900" font-size="10" fill="white">OP</text></svg></div><span class="chain-nm">Optimism</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats" class="sec-sm">
+  <div class="stats-grid">
+    <div class="stat-cell reveal"><div class="stat-n">$905B</div><div class="stat-l">Global remittance<br>flows per year</div></div>
+    <div class="stat-cell reveal d1"><div class="stat-n">$500B+</div><div class="stat-l">Annual ROSCA<br>volume worldwide</div></div>
+    <div class="stat-cell reveal d2"><div class="stat-n">1.3B</div><div class="stat-l">Adults still<br>unbanked globally</div></div>
+    <div class="stat-cell reveal d3"><div class="stat-n">$44.5B</div><div class="stat-l">Extracted in<br>remittance fees yearly</div></div>
+    <div class="stat-cell reveal d4"><div class="stat-n">6.5%</div><div class="stat-l">Average remittance fee<br>(UN target: 3%)</div></div>
+    <div class="stat-cell reveal d5"><div class="stat-n">0</div><div class="stat-l">Existing ZK-ROSCA<br>implementations</div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="sec">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;margin-bottom:52px">
+      <p class="sec-label">Questions</p>
+      <h2 class="sec-h">Everything you want to know</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">What is Kosh?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Kosh is a unified finance platform that brings remittances, payroll, savings circles, credit scoring, a spending card, and treasury management into one app. Instead of using 7 different tools that each demand your identity and expose your data, Kosh lets you verify once and do everything from one place — with zero-knowledge privacy protecting every transaction.</p></div></div>
+      </div>
+      <div class="faq-item reveal d1">
+        <button class="faq-q" aria-expanded="false">What problem does Kosh solve?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Crypto finance is fragmented. You use Wise to send money, a separate tool for payroll, WhatsApp for savings circles, nothing for credit scoring, Gnosis Safe for treasury, and a CEX-linked card for spending. Each app requires separate KYC, exposes different data publicly, and none of them share identity or reputation.</p><p>Kosh eliminates this fragmentation tax by unifying everything under one ZK identity. Verify once, use everywhere, build credit from day one.</p></div></div>
+      </div>
+      <div class="faq-item reveal d2">
+        <button class="faq-q" aria-expanded="false">What is a ZK-ROSCA?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>A ROSCA (Rotating Savings and Credit Association) is a savings circle where a group of people contribute monthly and each member takes turns receiving the full pool. They're called chit funds in India, stokvels in South Africa, tandas in Latin America. Billions of people use them worldwide.</p><p>Kosh's ZK-ROSCA is the world's first privacy-preserving on-chain savings circle. Contributions are anonymous, payouts are determined by a fair bid-based mechanism, and defaulters can be identified without compromising honest members' privacy. Every completed circle builds your ZK Credit Score.</p></div></div>
+      </div>
+      <div class="faq-item reveal d1">
+        <button class="faq-q" aria-expanded="false">What is the Kosh Card?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>The Kosh Card is a virtual (and eventually physical) spending card that lets you use your crypto balance — stablecoins, savings circle payouts, payroll earnings — at any merchant that accepts Visa or Mastercard.</p><p>Unlike existing crypto cards that require you to off-ramp through an exchange and link your entire wallet history, the Kosh Card draws from your private shielded balance on Midnight. The merchant gets paid in fiat. You spend in crypto. Your on-chain financial activity stays completely private.</p></div></div>
+      </div>
+      <div class="faq-item reveal d2">
+        <button class="faq-q" aria-expanded="false">Which chains does Kosh support?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Kosh is built natively on Midnight Network, which provides zero-knowledge privacy at the protocol level. Through LayerZero integration, Kosh connects to 50+ blockchains including Ethereum, Solana, Arbitrum, Base, Polygon, Avalanche, and more.</p><p>You can send from any supported chain and receive on any other — privately. Cardano serves as the settlement layer, anchoring every ZK proof to one of the most decentralized L1s in crypto.</p></div></div>
+      </div>
+      <div class="faq-item reveal d1">
+        <button class="faq-q" aria-expanded="false">What is the ZK Credit Score?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Every financial action on Kosh — sending remittances, receiving payroll, completing savings circles — feeds a private credit score computed entirely in zero-knowledge. You can prove "my score is above 700" to a lending protocol without revealing the actual number, your income, or your transaction history.</p><p>It's the first credit scoring system where informal financial activity — the kind that billions of unbanked people conduct every day — builds formal, provable credit.</p></div></div>
+      </div>
+      <div class="faq-item reveal d2">
+        <button class="faq-q" aria-expanded="false">Is Kosh live?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Kosh is currently in development, building on Midnight's testnet ahead of their mainnet launch in late March 2026. We're accepting early access signups now. Join the waitlist to be among the first users when we go live.</p></div></div>
+      </div>
+      <div class="faq-item reveal d1">
+        <button class="faq-q" aria-expanded="false">Who is behind Kosh?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Kosh is built by XXIX Labs, a blockchain development studio with prior grants from the Web3 Foundation (Polkadot Fast Grants), hackathon wins at UN COP'24 and Solana SuperteamDE, and validated traction from community finance protocols serving 50+ beta users with 94% retention and zero defaults.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="sec">
+  <div class="cta-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="cta-in reveal">
+      <p class="sec-label" style="justify-content:center;display:flex">Early access</p>
+      <h2>Ready to stop<br><span class="grad">juggling?</span></h2>
+      <p>Join the waitlist for early access. Be the first to experience unified, private finance — built for the world that actually needs it.</p>
+      <form class="email-form" id="cta-form">
+        <input type="email" placeholder="your@email.com" required autocomplete="email"/>
+        <button type="submit" class="btn btn-p">Get Early Access</button>
+      </form>
+      <p class="form-ok" id="cta-ok">✓ You're on the list. We'll be in touch.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <a href="#" aria-label="Kosh">
+          <svg height="24" viewBox="0 0 158 38" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#06B6D4"/>
+              </linearGradient>
+            </defs>
+            <polygon points="35,19 27,4 11,4 3,19 11,34 27,34" fill="url(#lg2)"/>
+            <text x="19" y="24" text-anchor="middle" font-family="Satoshi,system-ui" font-weight="900" font-size="14" fill="white" letter-spacing="-0.5">K</text>
+            <text x="46" y="26" font-family="Satoshi,system-ui" font-weight="900" font-size="19" fill="#F8FAFC" letter-spacing="2.5">KOSH</text>
+          </svg>
+        </a>
+        <span class="foot-copy">© 2026 XXIX Labs. All rights reserved.</span>
+      </div>
+      <div class="foot-links">
+        <a href="#">Twitter / X</a>
+        <a href="#">GitHub</a>
+        <a href="#">Docs</a>
+        <a href="mailto:kd@kosh.finance">kd@kosh.finance</a>
+      </div>
+      <div class="foot-built">
+        <span class="mid-badge">
+          <svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,0 11,3 11,9 6,12 1,9 1,3" fill="#8B5CF6"/></svg>
+          Built on Midnight
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 44);
+  }, {passive:true});
+
+  // Hamburger
+  const burger = document.getElementById('burger');
+  burger.addEventListener('click', function(){
+    const open = nav.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  // Close mobile nav on link click
+  document.querySelectorAll('.nav-mob a').forEach(function(a){
+    a.addEventListener('click', function(){
+      nav.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const id = a.getAttribute('href');
+      if(id === '#') return;
+      const el = document.querySelector(id);
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(function(it){
+        it.classList.remove('open');
+        it.querySelector('.faq-q').setAttribute('aria-expanded','false');
+      });
+      // Toggle clicked
+      if(!isOpen){
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+
+  // Email forms
+  ['hero-form','cta-form'].forEach(function(id){
+    const form = document.getElementById(id);
+    if(!form) return;
+    const okId = id === 'hero-form' ? 'hero-ok' : 'cta-ok';
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const ok = document.getElementById(okId);
+      form.style.display = 'none';
+      ok.style.display = 'block';
+    });
+  });
+
+  // Scroll reveal
+  const revObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('vis');
+        revObs.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){
+    revObs.observe(el);
+  });
+
+  // Hero fragmentation animation
+  const heroVis = document.getElementById('heroVis');
+  if(heroVis){
+    setTimeout(function(){
+      heroVis.classList.add('unified');
+    }, 1400);
+  }
+
+  // Progress bar animation (savings circle)
+  const progFill = document.querySelector('.cb-prog-f');
+  if(progFill){
+    const progObs = new IntersectionObserver(function(entries){
+      if(entries[0].isIntersecting){
+        progFill.style.width = '40%';
+        progObs.disconnect();
+      }
+    }, {threshold:0.5});
+    progObs.observe(progFill);
+  }
+
+  // Card 3D mouse tilt
+  const card3d = document.querySelector('.card-3d');
+  if(card3d){
+    card3d.addEventListener('mousemove', function(e){
+      const r = card3d.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card3d.style.transform = 'perspective(1000px) rotateX('+(-y*22)+'deg) rotateY('+(x*22)+'deg) scale(1.04)';
+      card3d.style.boxShadow = '0 80px 160px rgba(0,0,0,.85),0 30px 60px rgba(139,92,246,'+(0.25+Math.abs(x)*0.15)+'),0 0 0 1px rgba(255,255,255,.1)';
+    });
+    card3d.addEventListener('mouseleave', function(){
+      card3d.style.transform = '';
+      card3d.style.boxShadow = '';
+    });
+  }
+
+  // Stats count-up animation
+  const statNums = document.querySelectorAll('.stat-n');
+  const statObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(!entry.isIntersecting) return;
+      statObs.unobserve(entry.target);
+      const el = entry.target;
+      const raw = el.textContent.trim();
+      const numMatch = raw.match(/[\d.]+/);
+      if(!numMatch) return;
+      const target = parseFloat(numMatch[0]);
+      const prefix = raw.slice(0, raw.indexOf(numMatch[0]));
+      const suffix = raw.slice(raw.indexOf(numMatch[0]) + numMatch[0].length);
+      const isDecimal = numMatch[0].includes('.');
+      const decimals = isDecimal ? (numMatch[0].split('.')[1] || '').length : 0;
+      let start = null;
+      const duration = 1600;
+      function step(ts){
+        if(!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = eased * target;
+        el.textContent = prefix + (decimals ? current.toFixed(decimals) : Math.floor(current)) + suffix;
+        if(progress < 1) requestAnimationFrame(step);
+        else el.textContent = raw;
+      }
+      requestAnimationFrame(step);
+    });
+  }, {threshold: 0.6});
+  statNums.forEach(function(el){ statObs.observe(el); });
+})();
+</script>
+</body>
+</html>
