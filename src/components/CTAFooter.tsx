@@ -3,6 +3,7 @@
 import ScrollReveal from "./ScrollReveal";
 import EmailCapture from "./EmailCapture";
 import Logo from "./Logo";
+import GeoIcon from "./GeoIcon";
 
 function MidnightBadge() {
   return (
@@ -14,13 +15,31 @@ function MidnightBadge() {
         color: "#A78BFA",
       }}
     >
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
         <path d="M6 1L10 3.5v5L6 11 2 8.5v-5Z" stroke="#8B5CF6" strokeWidth="1" fill="rgba(139,92,246,0.2)" />
       </svg>
       Built on Midnight Network
     </div>
   );
 }
+
+const TRUST_BADGES = [
+  { icon: "shield" as const, text: "Private by default" },
+  { icon: "scale" as const, text: "Compliant by design" },
+  { icon: "globe" as const, text: "Built for the global south" },
+  { icon: "key" as const, text: "You own your data" },
+];
+
+const FOOTER_LINKS = {
+  Product: ["Features", "How it Works", "FAQ", "Docs"],
+  Company: ["About", "Blog", "Careers", "Contact"],
+};
+
+const COMMUNITY_LINKS = [
+  { label: "Twitter / X", href: "#" },
+  { label: "GitHub", href: "#" },
+  { label: "Discord", href: "#" },
+];
 
 export default function CTAFooter() {
   return (
@@ -30,19 +49,16 @@ export default function CTAFooter() {
         className="relative py-32 overflow-hidden"
         style={{ background: "linear-gradient(180deg, #080910 0%, #06070B 100%)" }}
       >
-        {/* Aurora */}
+        {/* Aurora — bumped violet opacity */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(139,92,246,0.12) 0%, rgba(6,182,212,0.05) 50%, transparent 100%)",
+            background: "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(139,92,246,0.18) 0%, rgba(6,182,212,0.05) 50%, transparent 100%)",
           }}
         />
         <div
           className="absolute bottom-0 left-0 right-0 pointer-events-none"
-          style={{
-            height: "200px",
-            background: "linear-gradient(0deg, #06070B, transparent)",
-          }}
+          style={{ height: "200px", background: "linear-gradient(0deg, #06070B, transparent)" }}
         />
 
         <div className="relative z-10 mx-auto max-w-3xl px-6 lg:px-10 text-center">
@@ -62,15 +78,12 @@ export default function CTAFooter() {
               }}
             >
               Ready to stop{" "}
-              <span className="gradient-text">juggling?</span>
+              <span className="serif-accent gradient-text">juggling?</span>
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={2}>
-            <p
-              className="mb-10 text-xl leading-relaxed"
-              style={{ color: "#9CA3AF" }}
-            >
+            <p className="mb-10 text-xl leading-relaxed" style={{ color: "#9CA3AF" }}>
               Join the waitlist for early access. Be the first to experience unified,
               private finance. Launching on Midnight mainnet — March 2026.
             </p>
@@ -89,17 +102,12 @@ export default function CTAFooter() {
             </p>
           </ScrollReveal>
 
-          {/* Trust row */}
+          {/* Trust row — GeoIcon replaces emoji */}
           <ScrollReveal delay={4}>
             <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
-              {[
-                { icon: "🛡", text: "Private by default" },
-                { icon: "⚖️", text: "Compliant by design" },
-                { icon: "🌍", text: "Built for the global south" },
-                { icon: "🔑", text: "You own your data" },
-              ].map((item) => (
+              {TRUST_BADGES.map((item) => (
                 <div key={item.text} className="flex items-center gap-2 text-sm" style={{ color: "#6B7280" }}>
-                  <span>{item.icon}</span>
+                  <GeoIcon name={item.icon} size={14} color="#6B7280" strokeWidth={1.5} />
                   <span>{item.text}</span>
                 </div>
               ))}
@@ -115,9 +123,9 @@ export default function CTAFooter() {
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-10">
-            {/* Logo + tagline */}
+            {/* Monochrome logo + tagline */}
             <div>
-              <Logo variant="full" size={28} className="mb-3" />
+              <Logo variant="full" size={28} className="mb-3" monochrome />
               <p className="text-sm max-w-xs" style={{ color: "#4B5563" }}>
                 Unified private finance. One ZK identity. Every chain.
               </p>
@@ -125,52 +133,33 @@ export default function CTAFooter() {
 
             {/* Links */}
             <div className="flex flex-wrap gap-8">
-              <div>
-                <p className="text-xs font-semibold mb-3" style={{ color: "#374151", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" }}>Product</p>
-                <div className="flex flex-col gap-2">
-                  {["Features", "How it Works", "FAQ", "Docs"].map((l) => (
-                    <a
-                      key={l}
-                      href="#"
-                      className="text-sm transition-colors"
-                      style={{ color: "#6B7280" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = "#9CA3AF")}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
-                    >
-                      {l}
-                    </a>
-                  ))}
+              {Object.entries(FOOTER_LINKS).map(([section, links]) => (
+                <div key={section}>
+                  <p className="text-xs font-semibold mb-3" style={{ color: "#374151", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" }}>{section}</p>
+                  <div className="flex flex-col gap-2">
+                    {links.map((l) => (
+                      <a
+                        key={l}
+                        href="#"
+                        className="text-sm transition-colors duration-200"
+                        style={{ color: "#6B7280" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#9CA3AF")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
+                      >
+                        {l}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <p className="text-xs font-semibold mb-3" style={{ color: "#374151", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" }}>Company</p>
-                <div className="flex flex-col gap-2">
-                  {["About", "Blog", "Careers", "Contact"].map((l) => (
-                    <a
-                      key={l}
-                      href="#"
-                      className="text-sm transition-colors"
-                      style={{ color: "#6B7280" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = "#9CA3AF")}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
-                    >
-                      {l}
-                    </a>
-                  ))}
-                </div>
-              </div>
+              ))}
               <div>
                 <p className="text-xs font-semibold mb-3" style={{ color: "#374151", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" }}>Community</p>
                 <div className="flex flex-col gap-2">
-                  {[
-                    { label: "Twitter / X", href: "#" },
-                    { label: "GitHub", href: "#" },
-                    { label: "Discord", href: "#" },
-                  ].map((l) => (
+                  {COMMUNITY_LINKS.map((l) => (
                     <a
                       key={l.label}
                       href={l.href}
-                      className="text-sm transition-colors"
+                      className="text-sm transition-colors duration-200"
                       style={{ color: "#6B7280" }}
                       onMouseEnter={(e) => (e.currentTarget.style.color = "#9CA3AF")}
                       onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
@@ -192,7 +181,10 @@ export default function CTAFooter() {
               <p className="text-xs" style={{ color: "#374151" }}>
                 © 2026 XXIX Labs. All rights reserved.
               </p>
-              <a href="mailto:kd@kosh.finance" className="text-xs transition-colors" style={{ color: "#4B5563" }}
+              <a
+                href="mailto:kd@kosh.finance"
+                className="text-xs transition-colors duration-200"
+                style={{ color: "#4B5563" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#6B7280")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#4B5563")}
               >
@@ -200,18 +192,18 @@ export default function CTAFooter() {
               </a>
             </div>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-xs transition-colors" style={{ color: "#374151" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#6B7280")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#374151")}
-              >
-                Privacy Policy
-              </a>
-              <a href="#" className="text-xs transition-colors" style={{ color: "#374151" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#6B7280")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#374151")}
-              >
-                Terms
-              </a>
+              {["Privacy Policy", "Terms"].map((l) => (
+                <a
+                  key={l}
+                  href="#"
+                  className="text-xs transition-colors duration-200"
+                  style={{ color: "#374151" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#6B7280")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#374151")}
+                >
+                  {l}
+                </a>
+              ))}
               <MidnightBadge />
             </div>
           </div>
