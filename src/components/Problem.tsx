@@ -1,47 +1,42 @@
 import ScrollReveal from "./ScrollReveal";
+import GeoIcon from "./GeoIcon";
+import SectionHeader from "./SectionHeader";
 
 const PAIN_POINTS = [
   {
     task: "Send money home",
     tool: "Wise, Western Union",
     cost: "6.5% fees, full identity exposed",
-    icon: "↗",
   },
   {
     task: "Get paid in crypto",
     tool: "Utopia Labs, Coinshift",
     cost: "Your salary is public on-chain",
-    icon: "💰",
   },
   {
     task: "Save with community",
     tool: "WhatsApp groups, cash envelopes",
     cost: "No enforcement, no credit history built",
-    icon: "🤝",
   },
   {
     task: "Prove creditworthiness",
     tool: "Nothing exists",
     cost: "Your entire wallet history or nothing",
-    icon: "📊",
   },
   {
     task: "Manage DAO treasury",
     tool: "Gnosis Safe, Squads",
     cost: "Signers doxxed, balances public",
-    icon: "🏛",
   },
   {
     task: "Spend crypto at a store",
     tool: "Gnosis Pay, Holyheld, CEX cards",
     cost: "Full wallet history linked to card",
-    icon: "💳",
   },
   {
     task: "Verify your identity",
     tool: "Re-KYC on every single app",
     cost: "Your data copied 10 times, breach risk 10x",
-    icon: "🪪",
   },
 ];
 
@@ -63,138 +58,128 @@ export default function Problem() {
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
-        <ScrollReveal>
-          <div className="section-label mb-4">The Problem</div>
-        </ScrollReveal>
-
-        <ScrollReveal delay={1}>
-          <h2
-            className="mb-4 font-display"
-            style={{
-              fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)",
-              fontWeight: 800,
-              letterSpacing: "-0.03em",
-              color: "#E8E9F0",
-            }}
-          >
-            The fragmentation tax you pay{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #EF4444, #F97316)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              every day
-            </span>
-          </h2>
-        </ScrollReveal>
-
-        <ScrollReveal delay={2}>
-          <p className="mb-12 max-w-2xl text-lg" style={{ color: "#9CA3AF" }}>
-            Seven financial tasks. Seven separate apps. Seven sets of KYC. Seven ways your data leaks.
-            Every day, this costs you money, time, and privacy.
-          </p>
-        </ScrollReveal>
-
-        {/* Desktop table */}
-        <ScrollReveal delay={2} className="hidden md:block">
-          <div
-            className="overflow-hidden rounded-2xl border"
-            style={{ borderColor: "rgba(255,255,255,0.07)", background: "#0D0E16" }}
-          >
-            {/* Table header */}
+        <div className="lg:grid lg:grid-cols-[40%_60%] lg:gap-16 lg:items-start">
+          {/* Left column — editorial intro */}
+          <div className="mb-12 lg:mb-0 lg:sticky lg:top-32">
+            {/* Ghost number */}
             <div
-              className="grid grid-cols-3 px-6 py-3 text-xs font-semibold uppercase tracking-widest border-b"
-              style={{
-                color: "#4B5563",
-                borderColor: "rgba(255,255,255,0.06)",
-                background: "rgba(255,255,255,0.02)",
-                fontFamily: "'JetBrains Mono', monospace",
-              }}
+              className="num-giant select-none pointer-events-none mb-2 leading-none"
+              aria-hidden
+              style={{ color: "transparent", WebkitTextStroke: "1px rgba(239,68,68,0.06)" }}
             >
-              <span>What you do</span>
-              <span>What you use today</span>
-              <span>What it costs you</span>
+              7
             </div>
 
-            {PAIN_POINTS.map((row, i) => (
-              <div
-                key={row.task}
-                className="pain-row grid grid-cols-3 items-center px-6 py-4 border-b"
-                style={{
-                  borderColor: "rgba(255,255,255,0.04)",
-                  borderLeft: "2px solid transparent",
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{row.icon}</span>
-                  <span className="text-sm font-semibold" style={{ color: "#E8E9F0" }}>
-                    {row.task}
-                  </span>
-                </div>
-                <div className="text-sm" style={{ color: "#6B7280" }}>
-                  {row.tool}
-                </div>
-                <div className="flex items-center gap-2 text-sm" style={{ color: "#FCA5A5" }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="flex-shrink-0">
-                    <circle cx="6" cy="6" r="5" stroke="rgba(239,68,68,0.5)" strokeWidth="1" />
-                    <path d="M6 3v4M6 8.5v.5" stroke="#EF4444" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
-                  {row.cost}
-                </div>
-              </div>
-            ))}
-
-            {/* Last row has no border */}
-            <div className="h-0 border-0" />
-          </div>
-        </ScrollReveal>
-
-        {/* Mobile cards */}
-        <div className="md:hidden grid grid-cols-1 gap-4">
-          {PAIN_POINTS.map((row, i) => (
-            <ScrollReveal key={row.task} delay={((i % 3) + 1) as 1 | 2 | 3}>
-              <div
-                className="rounded-xl border p-4"
-                style={{ background: "#0D0E16", borderColor: "rgba(255,255,255,0.07)" }}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">{row.icon}</span>
-                  <span className="font-semibold" style={{ color: "#E8E9F0" }}>{row.task}</span>
-                </div>
-                <p className="text-xs mb-2" style={{ color: "#6B7280" }}>
-                  Currently: <span style={{ color: "#9CA3AF" }}>{row.tool}</span>
-                </p>
-                <div
-                  className="flex items-start gap-2 text-xs rounded-lg p-2.5"
-                  style={{ background: "rgba(239,68,68,0.08)", color: "#FCA5A5" }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="flex-shrink-0 mt-0.5">
-                    <circle cx="6" cy="6" r="5" stroke="rgba(239,68,68,0.5)" strokeWidth="1" />
-                    <path d="M6 3v4M6 8.5v.5" stroke="#EF4444" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
-                  {row.cost}
-                </div>
-              </div>
+            <ScrollReveal>
+              <SectionHeader
+                label="The Problem"
+                align="left"
+                useTerminalLabel
+                title={
+                  <>
+                    The{" "}
+                    <span
+                      style={{
+                        background: "linear-gradient(135deg, #EF4444, #F97316)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      <span className="serif-accent">fragmentation</span>
+                    </span>{" "}
+                    tax you pay every day
+                  </>
+                }
+              />
             </ScrollReveal>
-          ))}
+
+            <ScrollReveal delay={1}>
+              <p className="mt-6 text-base leading-relaxed" style={{ color: "#6B7280", maxWidth: "340px" }}>
+                Seven financial tasks. Seven apps. Seven KYCs. Seven vectors for data leakage. Every day this costs you money, time, and privacy.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          {/* Right column — document rows */}
+          <ScrollReveal delay={1}>
+            <div>
+              {/* Column headers */}
+              <div
+                className="hidden md:grid grid-cols-[1fr_auto] items-center pb-3 mb-1"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <div
+                  className="text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "#4B5563", fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  What you do today
+                </div>
+                <div
+                  className="text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "#4B5563", fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  What it costs
+                </div>
+              </div>
+
+              {PAIN_POINTS.map((row, i) => (
+                <div
+                  key={row.task}
+                  className="pain-row flex items-start gap-4 py-5 cursor-default"
+                  style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+                >
+                  <span
+                    className="terminal-label flex-shrink-0 pt-0.5 w-8"
+                    style={{ opacity: 0.4 }}
+                    aria-hidden
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm mb-0.5" style={{ color: "#E8E9F0" }}>{row.task}</p>
+                    <p className="text-xs" style={{ color: "#4B5563" }}>{row.tool}</p>
+                  </div>
+                  <div
+                    className="cost-pill flex items-center gap-1.5 flex-shrink-0 px-2.5 py-1.5 rounded text-xs font-mono"
+                    style={{
+                      background: "rgba(239,68,68,0.08)",
+                      border: "1px solid rgba(239,68,68,0.12)",
+                      color: "#FCA5A5",
+                      maxWidth: "220px",
+                      textAlign: "right",
+                    }}
+                  >
+                    <GeoIcon name="x" size={10} color="#FCA5A5" strokeWidth={2} />
+                    <span className="leading-snug">{row.cost}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
 
-        {/* Transition bridge */}
+        {/* Full-bleed quote block */}
         <ScrollReveal delay={1}>
-          <div className="mt-16 text-center">
+          <div className="mt-20 relative">
             <div
-              className="inline-block rounded-2xl border px-8 py-6 max-w-2xl"
-              style={{ background: "rgba(139,92,246,0.06)", borderColor: "rgba(139,92,246,0.2)" }}
+              className="serif-accent absolute -top-8 -left-4 select-none pointer-events-none leading-none"
+              aria-hidden
+              style={{
+                fontSize: "clamp(5rem, 10vw, 8rem)",
+                color: "#8B5CF6",
+                opacity: 0.25,
+                lineHeight: 1,
+              }}
             >
+              &ldquo;
+            </div>
+            <div className="pl-8 lg:pl-16 max-w-3xl">
               <p
-                className="text-lg font-semibold leading-relaxed italic"
-                style={{ color: "#C4B5FD" }}
+                className="serif-accent text-xl lg:text-2xl leading-relaxed"
+                style={{ color: "#C4B5FD", fontStyle: "italic" }}
               >
-                &ldquo;What if it was one app? What if you verified once and it worked everywhere?
-                What if privacy wasn&apos;t a feature — it was the architecture?&rdquo;
+                What if it was one app? What if you verified once and it worked everywhere? What if privacy wasn&apos;t a feature — it was the architecture?
               </p>
             </div>
           </div>
