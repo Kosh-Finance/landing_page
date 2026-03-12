@@ -1,4 +1,5 @@
 import ScrollReveal from "./ScrollReveal";
+import SectionHeader from "./SectionHeader";
 
 interface Chain {
   name: string;
@@ -29,6 +30,7 @@ function ChainBadge({ chain }: { chain: Chain }) {
     <div
       className="chain-badge flex-shrink-0"
       style={{ color: chain.color }}
+      aria-label={chain.name}
     >
       <div
         className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-black flex-shrink-0"
@@ -41,35 +43,125 @@ function ChainBadge({ chain }: { chain: Chain }) {
   );
 }
 
-// Midnight SVG (simplified hexagonal logo)
 function MidnightLogo() {
   return (
     <div className="flex items-center justify-center">
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+      <svg width="48" height="48" viewBox="0 0 56 56" fill="none" aria-hidden>
         <defs>
-          <linearGradient id="mlg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="mlg2" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#8B5CF6" />
             <stop offset="100%" stopColor="#06B6D4" />
           </linearGradient>
         </defs>
-        <path d="M28 4 L50 16 L50 40 L28 52 L6 40 L6 16 Z" fill="rgba(139,92,246,0.12)" stroke="url(#mlg)" strokeWidth="1.5" />
-        <circle cx="28" cy="28" r="10" fill="rgba(139,92,246,0.2)" stroke="url(#mlg)" strokeWidth="1" />
-        <path d="M22 28 L26 24 L30 28 L26 32 Z" fill="url(#mlg)" opacity="0.8" />
-        <path d="M28 22 L32 26 L28 30 L24 26 Z" fill="url(#mlg)" opacity="0.5" />
+        <path d="M28 4 L50 16 L50 40 L28 52 L6 40 L6 16 Z" fill="rgba(139,92,246,0.12)" stroke="url(#mlg2)" strokeWidth="1.5" />
+        <circle cx="28" cy="28" r="10" fill="rgba(139,92,246,0.2)" stroke="url(#mlg2)" strokeWidth="1" />
+        <path d="M22 28 L26 24 L30 28 L26 32 Z" fill="url(#mlg2)" opacity="0.8" />
+        <path d="M28 22 L32 26 L28 30 L24 26 Z" fill="url(#mlg2)" opacity="0.5" />
       </svg>
     </div>
   );
 }
 
+/* Hub-and-spoke architecture diagram */
+function HubSpoke() {
+  const spokes = [
+    { label: "Cardano", sub: "Settlement · L1", color: "#4B7EFF", symbol: "₳", angle: -140 },
+    { label: "50+ Chains", sub: "ETH · SOL · ARB…", color: "#06B6D4", symbol: "∞", angle: -40 },
+    { label: "ZK Proof Layer", sub: "Privacy at source", color: "#8B5CF6", symbol: "ZK", angle: 90 },
+  ];
+
+  return (
+    <div className="relative mx-auto flex items-center justify-center" style={{ width: "360px", height: "280px" }}>
+      {/* SVG connectors */}
+      <svg className="absolute inset-0 w-full h-full" style={{ overflow: "visible" }} aria-hidden>
+        <defs>
+          <linearGradient id="connGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.3" />
+          </linearGradient>
+        </defs>
+        {/* Left spoke */}
+        <line x1="180" y1="140" x2="55" y2="65" stroke="url(#connGrad)" strokeWidth="1" strokeDasharray="4,4" style={{ animation: "driftRight 3s ease-in-out infinite" }} />
+        {/* Right spoke */}
+        <line x1="180" y1="140" x2="305" y2="65" stroke="url(#connGrad)" strokeWidth="1" strokeDasharray="4,4" style={{ animation: "driftRight 3s ease-in-out infinite", animationDelay: "0.5s" }} />
+        {/* Bottom spoke */}
+        <line x1="180" y1="140" x2="180" y2="235" stroke="url(#connGrad)" strokeWidth="1" strokeDasharray="4,4" style={{ animation: "driftRight 3s ease-in-out infinite", animationDelay: "1s" }} />
+      </svg>
+
+      {/* Center hub — Midnight */}
+      <div
+        className="absolute rounded-2xl border p-4 text-center z-10"
+        style={{
+          top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(6,182,212,0.1) 100%)",
+          borderColor: "rgba(139,92,246,0.35)",
+          minWidth: "120px",
+          boxShadow: "0 0 40px rgba(139,92,246,0.15)",
+        }}
+      >
+        <MidnightLogo />
+        <p className="mt-2 font-bold text-xs" style={{ color: "#E8E9F0" }}>Midnight Network</p>
+        <p className="text-xs mt-0.5" style={{ color: "#8B5CF6" }}>ZK Layer · Native</p>
+      </div>
+
+      {/* Cardano — top left */}
+      <div
+        className="absolute rounded-xl border p-3 text-center"
+        style={{
+          top: "8%", left: "2%",
+          background: "rgba(0,51,173,0.08)",
+          borderColor: "rgba(0,51,173,0.3)",
+          minWidth: "96px",
+        }}
+      >
+        <div className="w-8 h-8 rounded-full mx-auto mb-1.5 flex items-center justify-center" style={{ background: "rgba(0,51,173,0.15)" }}>
+          <span className="font-black text-base" style={{ color: "#4B7EFF" }}>₳</span>
+        </div>
+        <p className="font-bold text-xs" style={{ color: "#E8E9F0" }}>Cardano</p>
+        <p className="text-xs mt-0.5" style={{ color: "#4B7EFF", fontSize: "0.6rem" }}>Settlement · L1</p>
+      </div>
+
+      {/* 50+ Chains — top right */}
+      <div
+        className="absolute rounded-xl border p-3 text-center"
+        style={{
+          top: "8%", right: "2%",
+          background: "rgba(6,182,212,0.06)",
+          borderColor: "rgba(6,182,212,0.2)",
+          minWidth: "96px",
+        }}
+      >
+        <div className="w-8 h-8 rounded-full mx-auto mb-1.5 flex items-center justify-center" style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}>
+          <span className="font-black text-sm" style={{ color: "#06B6D4" }}>50+</span>
+        </div>
+        <p className="font-bold text-xs" style={{ color: "#E8E9F0" }}>Connected</p>
+        <p className="text-xs mt-0.5" style={{ color: "#06B6D4", fontSize: "0.6rem" }}>ETH · SOL · ARB…</p>
+      </div>
+
+      {/* LayerZero — bottom center */}
+      <div
+        className="absolute rounded-xl border px-4 py-2 text-center"
+        style={{
+          bottom: "2%", left: "50%", transform: "translateX(-50%)",
+          background: "rgba(107,114,128,0.08)",
+          borderColor: "rgba(107,114,128,0.2)",
+        }}
+      >
+        <p className="font-mono text-xs font-semibold" style={{ color: "#6B7280" }}>via LayerZero bridges</p>
+      </div>
+    </div>
+  );
+}
+
 export default function ChainSupport() {
-  // Duplicate for seamless marquee
   const allChains = [...CHAINS, ...CHAINS];
 
   return (
     <section
       id="chains"
       className="py-24 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #080A10 0%, #06070B 100%)" }}
+      style={{ background: "var(--color-surface, #09080F)" }}
     >
       {/* Deep violet glow */}
       <div
@@ -81,105 +173,39 @@ export default function ChainSupport() {
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="text-center mb-12">
-          <ScrollReveal>
-            <div className="section-label mb-4 justify-center">Multi-Chain</div>
-          </ScrollReveal>
-          <ScrollReveal delay={1}>
-            <h2
-              className="mb-4 font-display"
-              style={{
-                fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)",
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                color: "#E8E9F0",
-              }}
-            >
-              Built on Midnight.{" "}
-              <span className="gradient-text">Connected to everything.</span>
-            </h2>
-          </ScrollReveal>
+        {/* Left-aligned header */}
+        <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-16 lg:items-center mb-16">
+          <div>
+            <ScrollReveal>
+              <SectionHeader
+                label="Multi-Chain"
+                align="left"
+                title={
+                  <>
+                    Built on Midnight.{" "}
+                    <span className="gradient-text">Connected to{" "}
+                      <span className="serif-accent">everything.</span>
+                    </span>
+                  </>
+                }
+                body="Kosh is built natively on Midnight Network for zero-knowledge privacy at the protocol level. Through LayerZero, it connects to 50+ blockchains. Cardano anchors every proof to one of the most decentralized L1s in crypto."
+              />
+            </ScrollReveal>
+          </div>
+
+          {/* Hub-and-spoke architecture diagram */}
           <ScrollReveal delay={2}>
-            <p className="mx-auto max-w-2xl text-lg" style={{ color: "#9CA3AF" }}>
-              Kosh is built natively on Midnight Network for zero-knowledge privacy at the protocol level. Through LayerZero, it connects to 50+ blockchains. Cardano anchors every proof to one of the most decentralized L1s in crypto.
-            </p>
+            <HubSpoke />
           </ScrollReveal>
         </div>
-
-        {/* Architecture diagram */}
-        <ScrollReveal delay={1}>
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 mb-16">
-            {/* Midnight core */}
-            <div
-              className="rounded-2xl border p-6 text-center flex-shrink-0"
-              style={{
-                background: "linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(6,182,212,0.08) 100%)",
-                borderColor: "rgba(139,92,246,0.3)",
-                minWidth: "180px",
-              }}
-            >
-              <MidnightLogo />
-              <p className="mt-3 font-bold text-sm" style={{ color: "#E8E9F0" }}>Midnight Network</p>
-              <p className="text-xs mt-1" style={{ color: "#8B5CF6" }}>ZK Layer · Native</p>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-px h-8 lg:w-16 lg:h-px" style={{ background: "linear-gradient(180deg, rgba(139,92,246,0.5), rgba(6,182,212,0.5))" }} />
-              <span className="text-xs font-mono px-2" style={{ color: "#4B5563" }}>via LayerZero</span>
-              <div className="w-px h-8 lg:w-16 lg:h-px" style={{ background: "linear-gradient(180deg, rgba(6,182,212,0.5), rgba(139,92,246,0.5))" }} />
-            </div>
-
-            {/* L1 settlement */}
-            <div
-              className="rounded-2xl border p-6 text-center flex-shrink-0"
-              style={{
-                background: "rgba(0,51,173,0.08)",
-                borderColor: "rgba(0,51,173,0.3)",
-                minWidth: "160px",
-              }}
-            >
-              <div className="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: "rgba(0,51,173,0.15)", border: "1px solid rgba(0,51,173,0.3)" }}>
-                <span className="font-black text-base" style={{ color: "#4B7EFF" }}>₳</span>
-              </div>
-              <p className="font-bold text-sm" style={{ color: "#E8E9F0" }}>Cardano</p>
-              <p className="text-xs mt-1" style={{ color: "#4B7EFF" }}>Settlement · L1</p>
-            </div>
-
-            <div className="flex flex-col items-center gap-2 hidden lg:flex">
-              <div className="w-16 h-px" style={{ background: "linear-gradient(90deg, rgba(6,182,212,0.5), rgba(139,92,246,0.3))" }} />
-              <span className="text-xs font-mono px-2" style={{ color: "#4B5563" }}>bridges</span>
-              <div className="w-16 h-px" style={{ background: "linear-gradient(90deg, rgba(139,92,246,0.3), rgba(6,182,212,0.5))" }} />
-            </div>
-
-            {/* 50+ chains */}
-            <div
-              className="rounded-2xl border p-6 text-center flex-shrink-0"
-              style={{
-                background: "rgba(6,182,212,0.05)",
-                borderColor: "rgba(6,182,212,0.2)",
-                minWidth: "160px",
-              }}
-            >
-              <div
-                className="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center"
-                style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}
-              >
-                <span className="font-black text-xl" style={{ color: "#06B6D4" }}>50+</span>
-              </div>
-              <p className="font-bold text-sm" style={{ color: "#E8E9F0" }}>Connected Chains</p>
-              <p className="text-xs mt-1" style={{ color: "#06B6D4" }}>ETH · SOL · ARB · BASE…</p>
-            </div>
-          </div>
-        </ScrollReveal>
 
         {/* Chain marquee */}
         <ScrollReveal>
           <div className="relative overflow-hidden">
-            {/* Fade edges */}
             <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-              style={{ background: "linear-gradient(90deg, #06070B, transparent)" }} />
+              style={{ background: "linear-gradient(90deg, var(--color-surface, #09080F), transparent)" }} />
             <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-              style={{ background: "linear-gradient(-90deg, #06070B, transparent)" }} />
+              style={{ background: "linear-gradient(-90deg, var(--color-surface, #09080F), transparent)" }} />
 
             <div className="flex animate-marquee gap-4 w-max">
               {allChains.map((chain, i) => (
