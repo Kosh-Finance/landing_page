@@ -2,6 +2,14 @@
 
 import EmailCapture from "./EmailCapture";
 import ScrollReveal from "./ScrollReveal";
+import GeoIcon from "./GeoIcon";
+
+const QUICK_ACTIONS = [
+  { name: "send" as const, label: "Send", color: "#8B5CF6" },
+  { name: "pay" as const, label: "Pay", color: "#06B6D4" },
+  { name: "save" as const, label: "Save", color: "#F59E0B" },
+  { name: "spend" as const, label: "Spend", color: "#4ADE80" },
+];
 
 function PhoneMockup() {
   return (
@@ -13,7 +21,7 @@ function PhoneMockup() {
           <div className="flex gap-0.5">
             {[1,2,3].map(i => <div key={i} className="w-1 rounded-sm" style={{ height: `${i*3+3}px`, background: "#4ADE80" }} />)}
           </div>
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden>
             <path d="M1 7 C3 4 5 3 7 3 C9 3 11 4 13 7" stroke="#4ADE80" strokeWidth="1.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
@@ -31,7 +39,7 @@ function PhoneMockup() {
             </div>
           </div>
           <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(139,92,246,0.2)", border: "1px solid rgba(139,92,246,0.3)" }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
               <circle cx="8" cy="6" r="3" stroke="#8B5CF6" strokeWidth="1.2" />
               <path d="M2 14 C2 11 4.686 9 8 9 C11.314 9 14 11 14 14" stroke="#8B5CF6" strokeWidth="1.2" strokeLinecap="round" />
             </svg>
@@ -42,18 +50,13 @@ function PhoneMockup() {
       {/* Quick actions */}
       <div className="px-5 py-3">
         <div className="grid grid-cols-4 gap-2">
-          {[
-            { icon: "↗", label: "Send", color: "#8B5CF6" },
-            { icon: "💳", label: "Pay", color: "#06B6D4" },
-            { icon: "🔒", label: "Save", color: "#F59E0B" },
-            { icon: "⬇", label: "Spend", color: "#4ADE80" },
-          ].map((a) => (
+          {QUICK_ACTIONS.map((a) => (
             <div key={a.label} className="flex flex-col items-center gap-1">
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-sm"
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
                 style={{ background: `${a.color}18`, border: `1px solid ${a.color}30` }}
               >
-                <span style={{ fontSize: "1rem" }}>{a.icon}</span>
+                <GeoIcon name={a.name} size={16} color={a.color} strokeWidth={1.5} />
               </div>
               <span className="text-xs" style={{ color: "#6B7280" }}>{a.label}</span>
             </div>
@@ -127,7 +130,7 @@ function PhoneMockup() {
 export default function Hero() {
   return (
     <section
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-24 pb-20"
+      className="grid-texture relative min-h-screen flex flex-col justify-center overflow-hidden pt-24 pb-20"
       style={{ background: "linear-gradient(180deg, #06070B 0%, #080910 100%)" }}
     >
       {/* Aurora background */}
@@ -170,7 +173,7 @@ export default function Hero() {
                 }}
               >
                 Your crypto finances are scattered across{" "}
-                <span className="gradient-text">10 apps.</span>
+                <span className="serif-accent gradient-text">10 apps.</span>
               </h1>
             </ScrollReveal>
 
@@ -190,7 +193,8 @@ export default function Hero() {
               >
                 <p className="font-semibold text-lg" style={{ color: "#E8E9F0" }}>
                   Kosh puts it all in one place.{" "}
-                  <span className="gradient-text">Private by default. Compliant by design.</span>
+                  <span className="serif-accent gradient-text">Private by default.</span>{" "}
+                  Compliant by design.
                 </p>
               </div>
             </ScrollReveal>
@@ -209,15 +213,13 @@ export default function Hero() {
               </div>
               <a
                 href="#features"
-                className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-200"
                 style={{ color: "#6B7280" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#9CA3AF")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
               >
                 See how it works
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 2L7 12M3 8L7 12L11 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <GeoIcon name="arrow-right" size={14} />
               </a>
             </ScrollReveal>
           </div>
@@ -242,7 +244,10 @@ export default function Hero() {
                 style={{ background: "rgba(13,14,22,0.9)", borderColor: "rgba(139,92,246,0.25)", backdropFilter: "blur(12px)" }}
               >
                 <p className="text-xs" style={{ color: "#6B7280" }}>ZK Identity</p>
-                <p className="font-bold text-sm" style={{ color: "#E8E9F0" }}>Verified once ✓</p>
+                <div className="flex items-center gap-1.5">
+                  <GeoIcon name="circle-check" size={14} color="#4ADE80" />
+                  <p className="font-bold text-sm" style={{ color: "#E8E9F0" }}>Verified once</p>
+                </div>
               </div>
 
               <div
@@ -251,8 +256,8 @@ export default function Hero() {
               >
                 <p className="text-xs" style={{ color: "#6B7280" }}>Last transfer</p>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full" style={{ background: "#4ADE80" }} />
-                  <p className="font-bold text-sm" style={{ color: "#E8E9F0" }}>Private ·  Instant</p>
+                  <div className="live-dot" />
+                  <p className="font-bold text-sm" style={{ color: "#E8E9F0" }}>Private · Instant</p>
                 </div>
               </div>
             </div>
@@ -261,7 +266,7 @@ export default function Hero() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
             <path d="M10 4v12M5 11l5 5 5-5" stroke="rgba(139,92,246,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
