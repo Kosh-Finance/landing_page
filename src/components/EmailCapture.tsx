@@ -49,7 +49,7 @@ export default function EmailCapture({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`flex gap-3 ${size === "large" ? "flex-col sm:flex-row" : "flex-col xs:flex-row"}`}
+      className={`flex gap-3 ${size === "large" ? "flex-col sm:flex-row" : "flex-col sm:flex-row"}`}
     >
       <input
         type="email"
@@ -65,10 +65,9 @@ export default function EmailCapture({
       <button
         type="submit"
         disabled={loading}
-        className={`btn-glow flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-white transition-all disabled:opacity-70 ${
+        className={`btn-primary whitespace-nowrap disabled:opacity-70 ${
           size === "large" ? "px-7 py-4 text-base" : "px-5 py-3 text-sm"
         }`}
-        style={{ background: "linear-gradient(135deg, #8B5CF6, #06B6D4)" }}
       >
         {loading ? (
           <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
