@@ -1,6 +1,7 @@
 /* ───── Fonts ───── */
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,800,700,600,500,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 
 @import "tailwindcss";
 
@@ -9,25 +10,48 @@
   --color-bg:           #06070B;
   --color-bg-card:      #0D0E16;
   --color-bg-raised:    #111220;
+  --color-surface:      #09080F;
   --color-border:       rgba(255,255,255,0.07);
   --color-border-light: rgba(255,255,255,0.12);
 
   --color-violet:       #8B5CF6;
   --color-violet-light: #A78BFA;
   --color-violet-dim:   rgba(139,92,246,0.15);
+  --color-violet-mid:   rgba(139,92,246,0.25);
   --color-cyan:         #06B6D4;
   --color-cyan-light:   #67E8F9;
   --color-cyan-dim:     rgba(6,182,212,0.15);
+  --color-cyan-mid:     rgba(6,182,212,0.25);
   --color-amber:        #F59E0B;
   --color-amber-light:  #FCD34D;
   --color-amber-dim:    rgba(245,158,11,0.15);
+  --color-success:      #4ADE80;
 
   --color-text:         #E8E9F0;
+  --color-ink:          #F4F5FF;
   --color-muted:        #6B7280;
   --color-subtle:       #9CA3AF;
 
   --font-display: 'Satoshi', system-ui, sans-serif;
+  --font-serif:   'Instrument Serif', Georgia, serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  48px;
+  --space-2xl: 80px;
+  --space-3xl: 120px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-quart: cubic-bezier(0.5, 0, 0.75, 0);
+
+  --shadow-glow-violet: 0 0 40px rgba(139,92,246,0.3), 0 0 80px rgba(139,92,246,0.12);
+  --shadow-glow-cyan:   0 0 40px rgba(6,182,212,0.25), 0 0 80px rgba(6,182,212,0.1);
+  --shadow-card:        0 4px 24px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.6);
+  --shadow-card-hover:  0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
 }
 
 /* ───── Base ───── */
@@ -64,6 +88,13 @@ body::after {
 ::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.4); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(139,92,246,0.7); }
 
+/* ───── Accessibility: focus-visible ───── */
+:focus-visible {
+  outline: 2px solid rgba(139,92,246,0.7);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 /* ───── Gradient text ───── */
 .gradient-text {
   background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
@@ -76,6 +107,145 @@ body::after {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ───── Serif accent ───── */
+.serif-accent {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+}
+
+/* ───── Terminal label ───── */
+.terminal-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: #4B5563;
+  text-transform: uppercase;
+}
+.terminal-label::before {
+  content: '>';
+  color: #8B5CF6;
+  font-weight: 700;
+}
+
+/* ───── Ghost giant number ───── */
+.num-giant {
+  font-family: 'Satoshi', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(5rem, 15vw, 12rem);
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ───── Grid texture overlay ───── */
+.grid-texture {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ───── Live pulse dot ───── */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ADE80;
+  flex-shrink: 0;
+  animation: glowPulse 2.5s ease infinite;
+}
+
+/* ───── Scanline overlay ───── */
+.scanline-overlay {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.025) 2px,
+    rgba(0,0,0,0.025) 4px
+  );
+  pointer-events: none;
+}
+
+/* ───── Primary button (outlined → fill on hover) ───── */
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1.5px solid #8B5CF6;
+  color: #A78BFA;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.22s var(--ease-out-expo),
+              box-shadow 0.25s var(--ease-out-expo),
+              transform 0.15s var(--ease-out-expo);
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #8B5CF6;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s var(--ease-out-expo);
+  z-index: 0;
+}
+.btn-primary:hover::before { transform: scaleX(1); }
+.btn-primary:hover {
+  color: #ffffff;
+  box-shadow: var(--shadow-glow-violet);
+  transform: translateY(-1px);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid #8B5CF6;
+  outline-offset: 3px;
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; pointer-events: none; }
+.btn-primary > * { position: relative; z-index: 1; }
+
+/* ───── Ghost button ───── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #9CA3AF;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, transform 0.15s;
+}
+.btn-ghost:hover {
+  color: #E8E9F0;
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
+}
+.btn-ghost:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.3);
+  outline-offset: 3px;
 }
 
 /* ───── Aurora blobs ───── */
@@ -95,19 +265,27 @@ body::after {
 .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
 }
-.reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+
+.reveal-left  { opacity: 0; transform: translateX(-24px); transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo); }
+.reveal-right { opacity: 0; transform: translateX(24px);  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo); }
+.reveal-fade  { opacity: 0; transform: none;              transition: opacity 0.85s ease; }
+.reveal-left.revealed,
+.reveal-right.revealed,
+.reveal-fade.revealed  { opacity: 1; transform: none; }
+
 .reveal-delay-1 { transition-delay: 0.08s; }
 .reveal-delay-2 { transition-delay: 0.16s; }
 .reveal-delay-3 { transition-delay: 0.24s; }
 .reveal-delay-4 { transition-delay: 0.32s; }
 .reveal-delay-5 { transition-delay: 0.40s; }
+.reveal-delay-6 { transition-delay: 0.48s; }
+.reveal-delay-7 { transition-delay: 0.56s; }
+.reveal-delay-8 { transition-delay: 0.64s; }
 
-/* ───── Marquee ───── */
+/* ───── Keyframes ───── */
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -115,7 +293,6 @@ body::after {
 .animate-marquee { animation: marquee 30s linear infinite; }
 .animate-marquee:hover { animation-play-state: paused; }
 
-/* ───── Holographic card ───── */
 @keyframes holoShine {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
@@ -129,43 +306,58 @@ body::after {
   animation: holoShine 6s ease infinite;
 }
 
-/* ───── Glow button ───── */
-.btn-glow {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+  50%       { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
 }
-.btn-glow::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-  border-radius: inherit;
-  pointer-events: none;
+
+@keyframes driftRight {
+  0%   { transform: translateX(0); opacity: 0.4; }
+  50%  { opacity: 0.9; }
+  100% { transform: translateX(6px); opacity: 0.4; }
 }
-.btn-glow:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 30px rgba(139,92,246,0.45), 0 8px 20px rgba(0,0,0,0.5);
+
+@keyframes dramaticReveal {
+  0%   { opacity: 0; transform: scale(0.92) translateY(12px); filter: blur(6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
-.btn-glow:active { transform: translateY(0); }
+
+@keyframes countPulse {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92%       { opacity: 1; }
+  93%       { opacity: 0.4; }
+  94%       { opacity: 1; }
+  96%       { opacity: 0.6; }
+  97%       { opacity: 1; }
+}
 
 /* ───── Module card hover ───── */
 .module-card {
-  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  transition: border-color 0.35s var(--ease-out-expo),
+              box-shadow 0.35s var(--ease-out-expo),
+              transform 0.3s var(--ease-out-expo);
 }
 .module-card:hover {
-  border-color: rgba(139,92,246,0.35) !important;
-  box-shadow: 0 0 50px rgba(139,92,246,0.08), 0 20px 40px rgba(0,0,0,0.3);
-  transform: translateY(-2px);
+  border-color: rgba(139,92,246,0.3) !important;
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
 }
 
 /* ───── Pain row ───── */
 .pain-row {
-  transition: background 0.2s;
+  transition: background 0.18s;
 }
-.pain-row:hover { background: rgba(239,68,68,0.04); }
+.pain-row:hover .cost-pill {
+  background: rgba(239,68,68,0.14) !important;
+  border-color: rgba(239,68,68,0.28) !important;
+}
 
-/* ───── Section label ───── */
+/* ───── Section label (keep for legacy/variant use) ───── */
 .section-label {
   display: inline-flex;
   align-items: center;
@@ -185,15 +377,21 @@ body::after {
   background: currentColor;
 }
 
-/* ───── FAQ ───── */
+/* ───── FAQ accordion (grid-template-rows approach) ───── */
 .faq-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+  display: grid;
+  grid-template-rows: 0fr;
   opacity: 0;
+  transition: grid-template-rows 0.4s var(--ease-out-expo),
+              opacity 0.3s ease;
 }
 .faq-body.open {
+  grid-template-rows: 1fr;
   opacity: 1;
+}
+.faq-body-inner {
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* ───── Phone frame ───── */
@@ -280,4 +478,18 @@ body::after {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-family: 'JetBrains Mono', monospace;
+}
+
+/* ───── Reduced motion ───── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right, .reveal-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
