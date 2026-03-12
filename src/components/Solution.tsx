@@ -266,22 +266,25 @@ function KoshCard() {
   );
 }
 
+const IDENTITY_SPOKES = [
+  { label: "Send", color: "#8B5CF6", angle: -90 },
+  { label: "Pay", color: "#06B6D4", angle: -30 },
+  { label: "Save", color: "#F59E0B", angle: 30 },
+  { label: "Prove", color: "#4ADE80", angle: 90 },
+  { label: "Govern", color: "#06B6D4", angle: 150 },
+  { label: "Spend", color: "#A78BFA", angle: -150 },
+].map((m) => ({
+  ...m,
+  x: 110 + 75 * Math.sin((m.angle * Math.PI) / 180),
+  y: 110 - 75 * Math.cos((m.angle * Math.PI) / 180),
+}));
+
 function IdentityMockup() {
-  const modules = [
-    { label: "Send", color: "#8B5CF6", angle: -90 },
-    { label: "Pay", color: "#06B6D4", angle: -30 },
-    { label: "Save", color: "#F59E0B", angle: 30 },
-    { label: "Prove", color: "#4ADE80", angle: 90 },
-    { label: "Govern", color: "#06B6D4", angle: 150 },
-    { label: "Spend", color: "#A78BFA", angle: -150 },
-  ];
-  const r = 75;
   return (
     <div className="relative mx-auto" style={{ width: "220px", height: "220px" }}>
       <svg viewBox="0 0 220 220" className="w-full h-full">
-        {modules.map((m) => {
-          const x = 110 + r * Math.sin((m.angle * Math.PI) / 180);
-          const y = 110 - r * Math.cos((m.angle * Math.PI) / 180);
+        {IDENTITY_SPOKES.map((m) => {
+          const { x, y } = m;
           return (
             <g key={m.label}>
               <line x1="110" y1="110" x2={x} y2={y} stroke={m.color} strokeWidth="1" strokeOpacity="0.35" strokeDasharray="3,3" />

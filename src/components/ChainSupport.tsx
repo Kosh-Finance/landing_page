@@ -25,6 +25,8 @@ const CHAINS: Chain[] = [
   { name: "Solana", symbol: "SOL", color: "#9945FF", bg: "rgba(153,69,255,0.15)" },
 ];
 
+const ALL_CHAINS = [...CHAINS, ...CHAINS];
+
 function ChainBadge({ chain }: { chain: Chain }) {
   return (
     <div
@@ -155,8 +157,6 @@ function HubSpoke() {
 }
 
 export default function ChainSupport() {
-  const allChains = [...CHAINS, ...CHAINS];
-
   return (
     <section
       id="chains"
@@ -208,7 +208,7 @@ export default function ChainSupport() {
               style={{ background: "linear-gradient(-90deg, var(--color-surface, #09080F), transparent)" }} />
 
             <div className="flex animate-marquee gap-4 w-max">
-              {allChains.map((chain, i) => (
+              {ALL_CHAINS.map((chain, i) => (
                 <ChainBadge key={`${chain.name}-${i}`} chain={chain} />
               ))}
             </div>

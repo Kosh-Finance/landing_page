@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 
 interface TimelineStepProps {
   number: string;
-  title: React.ReactNode;
+  title: ReactNode;
   body: string;
   detail: string;
   color: string;
@@ -19,30 +20,30 @@ export default function TimelineStep({
   color,
   isLast = false,
 }: TimelineStepProps) {
-  const lineRef = useRef<SVGLineElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const line = lineRef.current;
     const wrap = wrapRef.current;
-    if (!line || isLast) return;
+    if (!line || !wrap || isLast) return;
 
-    const len = line.getTotalLength?.() ?? 80;
-    line.style.strokeDasharray = String(len);
-    line.style.strokeDashoffset = String(len);
+    // Start collapsed
+    line.style.transform = "scaleY(0)";
+    line.style.transformOrigin = "top";
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          line.style.transition = "stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s";
-          line.style.strokeDashoffset = "0";
-          observer.unobserve(wrap!);
+          line.style.transition = "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s";
+          line.style.transform = "scaleY(1)";
+          observer.unobserve(wrap);
         }
       },
       { threshold: 0.3 }
     );
 
-    if (wrap) observer.observe(wrap);
+    observer.observe(wrap);
     return () => observer.disconnect();
   }, [isLast]);
 
@@ -59,37 +60,18 @@ export default function TimelineStep({
             boxShadow: `0 0 16px ${color}30`,
           }}
         >
-          <span
-            className="font-mono text-xs font-bold"
-            style={{ color }}
-          >
+          <span className="font-mono text-xs font-bold" style={{ color }}>
             {number}
           </span>
         </div>
 
-        {/* Connector line */}
+        {/* Connector line — CSS scaleY animation, no SVG coordinate issues */}
         {!isLast && (
-          <div className="flex-1 relative mt-1" style={{ minHeight: "80px", width: "2px" }}>
-            <svg
-              className="absolute inset-0 w-full h-full overflow-visible"
-              style={{ width: "2px" }}
-            >
-              <line
-                ref={lineRef}
-                x1="1"
-                y1="0"
-                x2="1"
-                y2="100%"
-                stroke={color}
-                strokeWidth="1.5"
-                strokeOpacity="0.35"
-                strokeLinecap="round"
-              />
-            </svg>
-            {/* Static fallback line */}
+          <div className="flex-1 relative mt-1 w-px" style={{ minHeight: "80px" }}>
             <div
+              ref={lineRef}
               className="absolute inset-0"
-              style={{ background: `linear-gradient(180deg, ${color}25, ${color}08)` }}
+              style={{ background: `linear-gradient(180deg, ${color}40, ${color}08)` }}
             />
           </div>
         )}
