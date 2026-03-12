@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ScrollReveal from "./ScrollReveal";
+import SectionHeader from "./SectionHeader";
 
 const FAQS = [
   {
@@ -42,16 +43,11 @@ function FAQItem({ item, index }: { item: typeof FAQS[0]; index: number }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div
-      className="rounded-xl border overflow-hidden transition-all duration-300"
-      style={{
-        background: open ? "rgba(139,92,246,0.05)" : "#0D0E16",
-        borderColor: open ? "rgba(139,92,246,0.25)" : "rgba(255,255,255,0.07)",
-      }}
-    >
+    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+        className="w-full flex items-center justify-between gap-4 py-5 text-left"
+        aria-expanded={open}
       >
         <div className="flex items-center gap-4">
           <span
@@ -60,29 +56,30 @@ function FAQItem({ item, index }: { item: typeof FAQS[0]; index: number }) {
           >
             {String(index + 1).padStart(2, "0")}
           </span>
-          <span className="font-semibold" style={{ color: open ? "#E8E9F0" : "#C4C4CC" }}>
+          <span className="font-semibold text-base" style={{ color: open ? "#E8E9F0" : "#C4C4CC" }}>
             {item.q}
           </span>
         </div>
         <div
-          className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
+          className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
           style={{
             background: open ? "rgba(139,92,246,0.2)" : "rgba(255,255,255,0.05)",
             transform: open ? "rotate(45deg)" : "rotate(0deg)",
+            transition: "transform 0.3s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1))",
           }}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
             <path d="M6 2v8M2 6h8" stroke={open ? "#8B5CF6" : "#6B7280"} strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </div>
       </button>
-      <div
-        className="faq-body"
-        style={{ maxHeight: open ? "400px" : "0px", opacity: open ? 1 : 0 }}
-      >
-        <p className="px-6 pb-5 pl-16 leading-relaxed text-sm" style={{ color: "#9CA3AF" }}>
-          {item.a}
-        </p>
+      {/* grid-template-rows accordion */}
+      <div className={`faq-body${open ? " open" : ""}`}>
+        <div className="faq-body-inner">
+          <p className="pb-5 pl-10 leading-relaxed text-sm" style={{ color: "#9CA3AF" }}>
+            {item.a}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -97,30 +94,22 @@ export default function FAQ() {
     >
       <div className="mx-auto max-w-3xl px-6 lg:px-10">
         <ScrollReveal>
-          <div className="section-label mb-4">FAQ</div>
-        </ScrollReveal>
-        <ScrollReveal delay={1}>
-          <h2
-            className="mb-4 font-display"
-            style={{
-              fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)",
-              fontWeight: 800,
-              letterSpacing: "-0.03em",
-              color: "#E8E9F0",
-            }}
-          >
-            Questions worth asking.
-          </h2>
-        </ScrollReveal>
-        <ScrollReveal delay={2}>
-          <p className="mb-12 text-lg" style={{ color: "#9CA3AF" }}>
-            The ones we actually get — not the ones that make us look good.
-          </p>
+          <SectionHeader
+            label="FAQ"
+            align="left"
+            title={
+              <>
+                Questions{" "}
+                <span className="serif-accent" style={{ color: "#A78BFA" }}>worth asking.</span>
+              </>
+            }
+            body="The ones we actually get — not the ones that make us look good."
+          />
         </ScrollReveal>
 
-        <div className="flex flex-col gap-3">
+        <div className="mt-12" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           {FAQS.map((item, i) => (
-            <ScrollReveal key={item.q} delay={((i % 3) + 1) as 1 | 2 | 3}>
+            <ScrollReveal key={item.q} delay={(i % 3) + 1}>
               <FAQItem item={item} index={i} />
             </ScrollReveal>
           ))}
