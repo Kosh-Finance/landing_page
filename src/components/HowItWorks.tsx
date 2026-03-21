@@ -21,7 +21,7 @@ const STEPS = [
         <span className="serif-accent" style={{ color: "#06B6D4" }}>Use</span>{" "}any module.
       </>
     ),
-    body: "Send money, get paid, join circles, spend with your Kosh Card, manage treasury. One identity unlocks everything. Each action is private by default.",
+    body: "Join a savings circle. Contribute anonymously. Receive payouts. One ZK identity unlocks everything. Each action is private by default.",
     detail: "Unified ZK identity layer",
     color: "#06B6D4",
   },
@@ -32,7 +32,7 @@ const STEPS = [
         <span className="serif-accent" style={{ color: "#F59E0B" }}>Build</span>{" "}reputation silently.
       </>
     ),
-    body: "Every action feeds your ZK Credit Score. Remittances, payroll, savings circle completions — all build credit privately. Prove creditworthiness without revealing history. Portable across the Midnight ecosystem.",
+    body: "Every completed savings circle round is recorded as a private credential. Prove consistent saving without revealing amounts or co-members. Portable across the Midnight ecosystem.",
     detail: "Private on-chain credit history",
     color: "#F59E0B",
   },

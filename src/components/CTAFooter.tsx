@@ -25,14 +25,12 @@ function MidnightBadge() {
 
 const TRUST_BADGES = [
   { icon: "shield" as const, text: "Private by default" },
-  { icon: "scale" as const, text: "Compliant by design" },
-  { icon: "globe" as const, text: "Built for the global south" },
-  { icon: "key" as const, text: "You own your data" },
+  { icon: "lock" as const, text: "Smart contract enforced" },
+  { icon: "star" as const, text: "Built on Midnight" },
 ];
 
 const FOOTER_LINKS = {
-  Product: ["Features", "How it Works", "FAQ", "Docs"],
-  Company: ["About", "Blog", "Careers", "Contact"],
+  Product: ["How it Works", "FAQ", "Docs"],
 };
 
 const COMMUNITY_LINKS = [
@@ -77,15 +75,14 @@ export default function CTAFooter() {
                 lineHeight: 1.1,
               }}
             >
-              Ready to stop{" "}
-              <span className="serif-accent gradient-text">juggling?</span>
+              Ready to save{" "}
+              <span className="serif-accent gradient-text">privately?</span>
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={2}>
             <p className="mb-10 text-xl leading-relaxed" style={{ color: "#9CA3AF" }}>
-              Join the waitlist for early access. Be the first to experience unified,
-              private finance. Launching on Midnight mainnet — March 2026.
+              Join the waitlist for the world&apos;s first ZK-ROSCA. Built on Midnight.
             </p>
           </ScrollReveal>
 
@@ -94,7 +91,7 @@ export default function CTAFooter() {
               <EmailCapture
                 size="large"
                 placeholder="your@email.com"
-                buttonText="Get Early Access →"
+                buttonText="Join Waitlist →"
               />
             </div>
             <p className="text-xs" style={{ color: "#4B5563", fontFamily: "'JetBrains Mono', monospace" }}>
@@ -127,7 +124,7 @@ export default function CTAFooter() {
             <div>
               <Logo variant="full" size={28} className="mb-3" monochrome />
               <p className="text-sm max-w-xs" style={{ color: "#4B5563" }}>
-                Unified private finance. One ZK identity. Every chain.
+                The world&apos;s first ZK-ROSCA. Private savings, on-chain.
               </p>
             </div>
 
@@ -179,7 +176,7 @@ export default function CTAFooter() {
           >
             <div className="flex flex-wrap items-center gap-4">
               <p className="text-xs" style={{ color: "#374151" }}>
-                © 2026 XXIX Labs. All rights reserved.
+                © 2026 Kosh Finance. All rights reserved.
               </p>
               <a
                 href="mailto:kd@kosh.finance"
