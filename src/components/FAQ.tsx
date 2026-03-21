@@ -7,35 +7,31 @@ import SectionHeader from "./SectionHeader";
 const FAQS = [
   {
     q: "What is Kosh?",
-    a: "Kosh is a unified finance platform that brings remittances, payroll, savings circles, credit scoring, and treasury management into one app. Instead of using 6 different tools that each demand your identity and expose your data, Kosh lets you verify once and do everything from one place — with zero-knowledge privacy protecting every transaction.",
+    a: "Kosh is the world's first privacy-preserving savings circle — a ZK-ROSCA built on Midnight Network. It takes the savings circle model used by 500 million people worldwide and makes it anonymous, enforceable, and credit-building. Contributions are anonymous. Payouts are enforced by smart contracts. Every completed circle builds a private credit score you can prove without revealing.",
   },
   {
-    q: "What problem does Kosh solve?",
-    a: "Crypto finance is fragmented. You use Wise to send money, a separate tool for payroll, WhatsApp for savings circles, nothing for credit scoring, and Gnosis Safe for treasury. Each app requires separate KYC, exposes different data publicly, and none of them share identity or reputation. Kosh eliminates this fragmentation tax by unifying everything under one ZK identity.",
+    q: "What is a ROSCA?",
+    a: "A ROSCA (Rotating Savings and Credit Association) is a savings circle where a group of people contribute money regularly and each member takes turns receiving the full pool. They're called chit funds in India, stokvels in South Africa, tandas in Latin America, hui in East Asia. They're the largest informal savings system in the world — $500B+ annually — built entirely on social trust.",
   },
   {
-    q: "What is a ZK-ROSCA?",
-    a: "A ROSCA (Rotating Savings and Credit Association) is a savings circle where a group of people contribute monthly and each member takes turns receiving the pool. Billions of people use them worldwide — they're called chit funds in India, stokvels in South Africa, tandas in Latin America. Kosh's ZK-ROSCA is the world's first privacy-preserving on-chain savings circle: contributions are anonymous, payouts are fair, and defaulters can be identified without compromising honest members. Every completed circle builds your ZK Credit Score.",
+    q: "Why does a savings circle need privacy?",
+    a: "Traditional ROSCAs fail because of default risk — when someone knows who's in the circle, they can exploit that information. On-chain, it's worse: Ethereum exposes every address, every amount, every payout. Members face social pressure, targeted fraud, and reputational risk. Privacy isn't optional — it's what makes the system function honestly.",
   },
   {
-    q: "Which chains does Kosh support?",
-    a: "Kosh is built natively on Midnight Network, which provides zero-knowledge privacy at the protocol level. Through LayerZero integration, Kosh connects to 50+ blockchains including Ethereum, Solana, Arbitrum, Base, Polygon, Avalanche, and more. Cardano serves as the settlement layer. You can send from any supported chain and receive on any other — privately.",
+    q: "How does Kosh handle defaults without exposing members?",
+    a: "Kosh uses conditional deanonymization — a ZK mechanism where a member's identity is cryptographically locked and can only be revealed if they miss a contribution. Honest members stay fully anonymous throughout the entire circle. Only a proven defaulter's identity is disclosed, and only to the circle members, not to the public chain.",
   },
   {
-    q: "What is the ZK Credit Score?",
-    a: "Every financial action on Kosh — sending remittances, receiving payroll, completing savings circles — feeds a private credit score computed entirely in zero-knowledge. You can prove 'my score is above 700' to a lending protocol without revealing the actual number, your income, or your transaction history. It's the first credit scoring system where informal financial activity builds formal credit.",
+    q: "What is a participation proof?",
+    a: "When you complete a savings circle, Kosh generates a zero-knowledge proof that you participated faithfully — contributed every round, never defaulted — without revealing who you are, how much you saved, or who else was in the circle. This proof is portable: you can present it to lending protocols, employers, or financial institutions to demonstrate creditworthiness.",
   },
   {
-    q: "What is the Kosh Card?",
-    a: "The Kosh Card is a virtual (and eventually physical) spending card that lets you use your crypto balance — stablecoins, savings circle payouts, payroll earnings — at any merchant that accepts Visa or Mastercard. Your shielded balance converts to fiat at the point of sale. Unlike existing crypto cards that require you to off-ramp through an exchange and link your entire wallet history, the Kosh Card draws from your private balance on Midnight. The merchant gets paid in fiat, you spend in crypto, and your on-chain financial activity stays private.",
+    q: "Why Midnight and not another blockchain?",
+    a: "Midnight is the only smart contract platform where privacy is built into the language itself. Midnight's Compact language compiles directly to ZK circuits — every variable in a contract is private by default unless explicitly published. Building a ZK-ROSCA on Ethereum requires heroic cryptographic engineering. On Midnight, it's a natural consequence of the platform.",
   },
   {
     q: "Is Kosh live?",
-    a: "Kosh is currently in development, building on Midnight's testnet ahead of their mainnet launch in late March 2026. We're accepting early access signups. Join the waitlist to be first in line.",
-  },
-  {
-    q: "Who is behind Kosh?",
-    a: "Kosh is built by XXIX Labs, a blockchain development studio with prior grants from the Web3 Foundation (Polkadot Fast Grants), hackathon wins at UN COP'24 and Solana SuperteamDE, and validated traction from community finance protocols serving 50+ beta users with 94% retention and zero defaults.",
+    a: "Kosh is currently in development on Midnight's testnet. Midnight mainnet is targeting launch in 2026. We're accepting waitlist signups now — join to be first in line when we open access.",
   },
 ];
 
@@ -103,7 +99,7 @@ export default function FAQ() {
                 <span className="serif-accent" style={{ color: "#A78BFA" }}>worth asking.</span>
               </>
             }
-            body="The ones we actually get — not the ones that make us look good."
+            body="Everything you need to know about ZK-ROSCAs and why they matter."
           />
         </ScrollReveal>
 
