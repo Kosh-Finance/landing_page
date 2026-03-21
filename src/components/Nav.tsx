@@ -6,9 +6,8 @@ import EmailCapture from "./EmailCapture";
 import GeoIcon from "./GeoIcon";
 
 const NAV_LINKS = [
-  { label: "Features", href: "#features" },
   { label: "How it Works", href: "#how-it-works" },
-  { label: "Chains", href: "#chains" },
+  { label: "Why Midnight", href: "#why-midnight" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -61,7 +60,7 @@ export default function Nav() {
               onClick={() => setShowEmailModal(true)}
               className="btn-primary text-sm px-4 py-2"
             >
-              Get Early Access
+              Join Waitlist
             </button>
           </div>
 
@@ -108,7 +107,7 @@ export default function Nav() {
                 </a>
               ))}
               <div className="pt-2">
-                <EmailCapture buttonText="Get Early Access" />
+                <EmailCapture buttonText="Join Waitlist" />
               </div>
             </div>
           </div>
@@ -140,7 +139,7 @@ export default function Nav() {
               Join the waitlist
             </h3>
             <p className="mb-6 text-sm" style={{ color: "#9CA3AF" }}>
-              Be first in line for unified private finance. Launching on Midnight mainnet — March 2026.
+              Be first to use the world&apos;s first ZK-ROSCA. Launching on Midnight mainnet — 2026.
             </p>
             <EmailCapture size="large" />
           </div>
