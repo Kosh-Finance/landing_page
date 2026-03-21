@@ -6,43 +6,29 @@ import SectionHeader from "./SectionHeader";
 
 const STATS = [
   {
-    number: "$905B",
-    label: "Global remittance flows per year",
-    sub: "And growing at 4% YoY",
+    number: "$500B+",
+    label: "Annual ROSCA volume worldwide",
+    sub: "Chit funds, tandas, stokvels",
     color: "#8B5CF6",
     span: "col-span-2 md:col-span-1",
   },
   {
-    number: "$500B+",
-    label: "Annual ROSCA / savings circle volume",
-    sub: "Chit funds, tandas, stokvels — worldwide",
-    color: "#06B6D4",
+    number: "$360B",
+    label: "India's informal chit fund market",
+    sub: "100× the registered sector",
+    color: "#F59E0B",
     span: "col-span-2 md:col-span-1",
   },
   {
-    number: "1.3B",
-    label: "Adults still unbanked globally",
-    sub: "With smartphones but no formal credit",
-    color: "#F59E0B",
-    span: "col-span-2 md:col-span-2",
-  },
-  {
-    number: "$44.5B",
-    label: "Extracted in remittance fees annually",
-    sub: "UN target: 3%. Reality: 6.5%",
-    color: "#EF4444",
-    span: "col-span-1",
-  },
-  {
-    number: "6.5%",
-    label: "Average remittance fee",
-    sub: "Kosh: ~0.1%",
-    color: "#F97316",
-    span: "col-span-1",
+    number: "500M+",
+    label: "People using savings circles globally",
+    sub: "Mostly informal, trust-based",
+    color: "#06B6D4",
+    span: "col-span-2",
   },
   {
     number: "0",
-    label: "Existing ZK-ROSCA implementations",
+    label: "Privacy-preserving ROSCAs that exist",
     sub: "We're building the first one",
     color: "#4ADE80",
     span: "col-span-2",
@@ -170,18 +156,18 @@ export default function Stats() {
             label="The Scale"
             title={
               <>
-                The problem is{" "}
+                The market is{" "}
                 <span
                   style={{
-                    background: "linear-gradient(135deg, #EF4444, #F97316)",
+                    background: "linear-gradient(135deg, #8B5CF6, #06B6D4)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
                   }}
                 >
-                  <span className="serif-accent">astronomically large.</span>
+                  <span className="serif-accent">already there.</span>
                 </span>
-                {" "}The solution doesn&apos;t exist yet.
+                {" "}The privacy isn&apos;t.
               </>
             }
           />
