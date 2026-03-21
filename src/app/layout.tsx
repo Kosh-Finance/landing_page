@@ -2,26 +2,26 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kosh — Unified Private Finance. One App. Zero Exposure.",
+  title: "Kosh — The World's First Privacy-Preserving Savings Circle",
   description:
-    "Remittances, payroll, savings circles, credit scoring, treasury management, and a spending card — unified under one zero-knowledge identity. Built on Midnight Network.",
+    "Kosh is the first ZK-ROSCA: a privacy-preserving savings circle built on Midnight Network. Contributions are anonymous. Payouts are enforced by smart contracts. Every completed circle builds credit — privately.",
   keywords: [
-    "Kosh", "kosh.finance", "private finance", "zero knowledge", "ZK remittances",
-    "ZK payroll", "ZK-ROSCA", "savings circles", "Midnight Network", "Web3 finance",
-    "cross-chain", "privacy fintech", "ZK credit score"
+    "Kosh", "kosh.finance", "ZK-ROSCA", "savings circle", "chit fund", "tanda", "stokvel",
+    "zero knowledge", "Midnight Network", "private savings", "ZK credit", "on-chain ROSCA",
+    "privacy fintech", "Cardano", "ZK proofs"
   ],
   openGraph: {
-    title: "Kosh — All your finance. One place. Zero exposure.",
+    title: "Kosh — The World's First Privacy-Preserving Savings Circle",
     description:
-      "Seven finance modules, one ZK identity, every chain. Send, earn, save, prove, spend, and govern — privately.",
+      "500 million people save together in savings circles. None of them have privacy. Kosh changes that — the first ZK-ROSCA on any blockchain.",
     type: "website",
     url: "https://kosh.finance",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kosh — Unified Private Finance",
+    title: "Kosh — The World's First ZK-ROSCA",
     description:
-      "The world's first ZK-ROSCA. Private remittances. ZK payroll. Credit from your financial life — without revealing it.",
+      "Contributions anonymous. Payouts enforced by code. Credit built privately. The world's first privacy-preserving savings circle — on Midnight Network.",
   },
 };
 

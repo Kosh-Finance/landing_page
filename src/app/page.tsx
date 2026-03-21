@@ -3,7 +3,7 @@ import Hero from "@/components/Hero";
 import Problem from "@/components/Problem";
 import Solution from "@/components/Solution";
 import HowItWorks from "@/components/HowItWorks";
-import ChainSupport from "@/components/ChainSupport";
+import WhyMidnight from "@/components/WhyMidnight";
 import Stats from "@/components/Stats";
 import FAQ from "@/components/FAQ";
 import CTAFooter from "@/components/CTAFooter";
@@ -17,7 +17,7 @@ export default function Home() {
         <Problem />
         <Solution />
         <HowItWorks />
-        <ChainSupport />
+        <WhyMidnight />
         <Stats />
         <FAQ />
         <CTAFooter />
