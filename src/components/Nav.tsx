@@ -1,150 +1,137 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Logo from "./Logo";
-import EmailCapture from "./EmailCapture";
-import GeoIcon from "./GeoIcon";
+import { motion, AnimatePresence } from "framer-motion";
 
-const NAV_LINKS = [
-  { label: "How it Works", href: "#how-it-works" },
+const links = [
+  { label: "How It Works", href: "#how-it-works" },
   { label: "Why Midnight", href: "#why-midnight" },
   { label: "FAQ", href: "#faq" },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      <motion.header
         style={{
-          background: scrolled ? "rgba(6,7,11,0.85)" : "transparent",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          transition: "background 0.4s, border-color 0.4s",
+          background: scrolled ? "rgba(8,11,15,0.85)" : "transparent",
+          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
           backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
-          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+          WebkitBackdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
         }}
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+        <div className="section-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "64px" }}>
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <Logo variant="full" size={30} />
+          <a href="#" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#F0F4FF" strokeWidth="1.5" />
+              <circle cx="12" cy="12" r="4" fill="#F0F4FF" />
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#F0F4FF" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <span style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "1rem", color: "var(--color-ink)", letterSpacing: "-0.01em" }}>
+              Kosh Finance
+            </span>
           </a>
 
-          {/* Desktop links */}
-          <div className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
+          {/* Desktop nav */}
+          <nav style={{ display: "flex", alignItems: "center", gap: "2rem" }} className="hidden md:flex">
+            {links.map((l) => (
               <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: "#9CA3AF" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#E8E9F0")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#9CA3AF")}
+                key={l.href}
+                href={l.href}
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "var(--color-silver)",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-ink)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-silver)")}
               >
-                {link.label}
+                {l.label}
               </a>
             ))}
-          </div>
+          </nav>
 
           {/* CTA */}
-          <div className="hidden md:block">
-            <button
-              onClick={() => setShowEmailModal(true)}
-              className="btn-primary text-sm px-4 py-2"
-            >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <a href="#waitlist" className="btn-lunar" style={{ padding: "0.5rem 1.25rem", fontSize: "0.8125rem" }}>
               Join Waitlist
+            </a>
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", color: "var(--color-ink)" }}
+              aria-label="Toggle menu"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                {mobileOpen
+                  ? <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
+                  : <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                }
+              </svg>
             </button>
           </div>
-
-          {/* Mobile menu toggle — 44px touch target */}
-          <button
-            className="md:hidden p-2.5 rounded-lg"
-            style={{ color: "#9CA3AF" }}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? (
-              <GeoIcon name="x" size={20} />
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-                <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            )}
-          </button>
         </div>
+      </motion.header>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div
-            className="md:hidden border-t px-6 py-4"
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
             style={{
-              background: "rgba(6,7,11,0.95)",
-              borderColor: "rgba(255,255,255,0.06)",
+              position: "fixed",
+              top: "64px",
+              left: 0,
+              right: 0,
+              zIndex: 99,
+              background: "rgba(8,11,15,0.97)",
+              borderBottom: "1px solid rgba(255,255,255,0.07)",
               backdropFilter: "blur(20px)",
+              padding: "1.5rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
             }}
           >
-            <div className="flex flex-col gap-4">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium transition-colors duration-200"
-                  style={{ color: "#9CA3AF" }}
-                  onClick={() => setMenuOpen(false)}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#E8E9F0")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "#9CA3AF")}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <div className="pt-2">
-                <EmailCapture buttonText="Join Waitlist" />
-              </div>
-            </div>
-          </div>
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setMobileOpen(false)}
+                style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", fontWeight: 500, color: "var(--color-silver)", textDecoration: "none" }}
+              >
+                {l.label}
+              </a>
+            ))}
+          </motion.div>
         )}
-      </nav>
-
-      {/* Email modal for desktop CTA */}
-      {showEmailModal && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-6"
-          style={{ background: "rgba(6,7,11,0.85)", backdropFilter: "blur(12px)", animation: "dramaticReveal 0.3s var(--ease-out-expo) forwards" }}
-          onClick={(e) => e.target === e.currentTarget && setShowEmailModal(false)}
-        >
-          <div
-            className="relative w-full max-w-md rounded-2xl border p-8"
-            style={{ background: "#0D0E16", borderColor: "rgba(139,92,246,0.3)" }}
-          >
-            <button
-              className="absolute top-4 right-4 p-1.5 rounded-md transition-colors duration-200"
-              onClick={() => setShowEmailModal(false)}
-              style={{ color: "#6B7280" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#E8E9F0")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
-              aria-label="Close modal"
-            >
-              <GeoIcon name="x" size={16} />
-            </button>
-            <h3 className="mb-2 text-xl font-bold" style={{ color: "#E8E9F0" }}>
-              Join the waitlist
-            </h3>
-            <p className="mb-6 text-sm" style={{ color: "#9CA3AF" }}>
-              Be first to use the world&apos;s first ZK-ROSCA. Launching on Midnight mainnet — 2026.
-            </p>
-            <EmailCapture size="large" />
-          </div>
-        </div>
-      )}
+      </AnimatePresence>
     </>
   );
 }

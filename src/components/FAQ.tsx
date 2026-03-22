@@ -1,116 +1,193 @@
 "use client";
 
-import { useState } from "react";
-import ScrollReveal from "./ScrollReveal";
-import SectionHeader from "./SectionHeader";
+import { useState, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
-const FAQS = [
-  {
-    q: "What is Kosh?",
-    a: "Kosh is the world's first privacy-preserving savings circle — a ZK-ROSCA built on Midnight Network. It takes the savings circle model used by 500 million people worldwide and makes it anonymous, enforceable, and credit-building. Contributions are anonymous. Payouts are enforced by smart contracts. Every completed circle builds a private credit score you can prove without revealing.",
-  },
+const faqs = [
   {
     q: "What is a ROSCA?",
-    a: "A ROSCA (Rotating Savings and Credit Association) is a savings circle where a group of people contribute money regularly and each member takes turns receiving the full pool. They're called chit funds in India, stokvels in South Africa, tandas in Latin America, hui in East Asia. They're the largest informal savings system in the world — $500B+ annually — built entirely on social trust.",
+    a: "A ROSCA (Rotating Savings and Credit Association) is a group savings mechanism where members contribute a fixed amount each period, and one member receives the entire pool — rotating until everyone has received once. Also known as chit funds (India), tandas (Latin America), and stokvels (Southern Africa).",
   },
   {
-    q: "Why does a savings circle need privacy?",
-    a: "Traditional ROSCAs fail because of default risk — when someone knows who's in the circle, they can exploit that information. On-chain, it's worse: Ethereum exposes every address, every amount, every payout. Members face social pressure, targeted fraud, and reputational risk. Privacy isn't optional — it's what makes the system function honestly.",
+    q: "What makes Kosh's ROSCA 'ZK'?",
+    a: "ZK proofs let participants prove they've contributed the correct amount without revealing the actual amount or their identity. This means the ROSCA can be enforced by code without anyone being able to track individual contribution amounts or link contributions to real-world identities.",
   },
   {
-    q: "How does Kosh handle defaults without exposing members?",
-    a: "Kosh uses conditional deanonymization — a ZK mechanism where a member's identity is cryptographically locked and can only be revealed if they miss a contribution. Honest members stay fully anonymous throughout the entire circle. Only a proven defaulter's identity is disclosed, and only to the circle members, not to the public chain.",
+    q: "Who controls the funds?",
+    a: "No one. Funds are locked in a smart contract on Midnight Network. The contract enforces the rules you set when creating the circle — no admin, no override, no custodian.",
   },
   {
-    q: "What is a participation proof?",
-    a: "When you complete a savings circle, Kosh generates a zero-knowledge proof that you participated faithfully — contributed every round, never defaulted — without revealing who you are, how much you saved, or who else was in the circle. This proof is portable: you can present it to lending protocols, employers, or financial institutions to demonstrate creditworthiness.",
+    q: "What happens if someone doesn't pay?",
+    a: "Default conditions are set when the circle is created. The contract enforces them automatically — this could be forfeiture of future payouts, loss of ZK credit score, or exclusion from future circles. The specific rule is chosen by the circle creator.",
   },
   {
-    q: "Why Midnight and not another blockchain?",
-    a: "Midnight is the only smart contract platform where privacy is built into the language itself. Midnight's Compact language compiles directly to ZK circuits — every variable in a contract is private by default unless explicitly published. Building a ZK-ROSCA on Ethereum requires heroic cryptographic engineering. On Midnight, it's a natural consequence of the platform.",
+    q: "How is payout order decided?",
+    a: "The circle creator chooses at setup: fixed order (pre-agreed rotation), or a verifiably random on-chain lottery. Both are transparent and tamper-proof.",
   },
   {
-    q: "Is Kosh live?",
-    a: "Kosh is currently in development on Midnight's testnet. Midnight mainnet is targeting launch in 2026. We're accepting waitlist signups now — join to be first in line when we open access.",
+    q: "When will Kosh launch?",
+    a: "Kosh is targeting launch alongside Midnight Network mainnet in 2026. Join the waitlist to be notified and get early access.",
+  },
+  {
+    q: "What currencies are supported?",
+    a: "Kosh will initially support Midnight's native token and stablecoins available on the Midnight Network. Additional assets will be added as the ecosystem matures.",
+  },
+  {
+    q: "Is Kosh open source?",
+    a: "The Kosh protocol and Compact ZK circuits will be publicly auditable. The core contracts are designed to be composable — any developer can build ROSCA mechanics on top.",
   },
 ];
 
-function FAQItem({ item, index }: { item: typeof FAQS[0]; index: number }) {
+function FAQItem({ item, index }: { item: typeof faqs[0]; index: number }) {
   const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
 
   return (
-    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.04, ease: [0.19, 1, 0.22, 1] }}
+      style={{ borderBottom: "1px solid var(--color-border)" }}
+    >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 py-5 text-left"
-        aria-expanded={open}
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "1.5rem 0",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "left",
+          gap: "1rem",
+        }}
       >
-        <div className="flex items-center gap-4">
-          <span
-            className="font-mono text-xs font-bold flex-shrink-0"
-            style={{ color: open ? "#8B5CF6" : "#374151" }}
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span className="font-semibold text-base" style={{ color: open ? "#E8E9F0" : "#C4C4CC" }}>
-            {item.q}
-          </span>
-        </div>
-        <div
-          className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
+        <span
           style={{
-            background: open ? "rgba(139,92,246,0.2)" : "rgba(255,255,255,0.05)",
-            transform: open ? "rotate(45deg)" : "rotate(0deg)",
-            transition: "transform 0.3s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1))",
+            fontFamily: "var(--font-sans)",
+            fontSize: "1rem",
+            fontWeight: 500,
+            color: open ? "var(--color-ink)" : "var(--color-text)",
+            transition: "color 0.2s",
+            lineHeight: 1.4,
           }}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-            <path d="M6 2v8M2 6h8" stroke={open ? "#8B5CF6" : "#6B7280"} strokeWidth="1.5" strokeLinecap="round" />
+          {item.q}
+        </span>
+        <motion.div
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.25, ease: [0.19, 1, 0.22, 1] }}
+          style={{ flexShrink: 0, color: "var(--color-muted)" }}
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M8 3v10M3 8h10" />
           </svg>
-        </div>
+        </motion.div>
       </button>
-      {/* grid-template-rows accordion */}
-      <div className={`faq-body${open ? " open" : ""}`}>
-        <div className="faq-body-inner">
-          <p className="pb-5 pl-10 leading-relaxed text-sm" style={{ color: "#9CA3AF" }}>
-            {item.a}
-          </p>
-        </div>
-      </div>
-    </div>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.19, 1, 0.22, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.9375rem",
+                lineHeight: 1.7,
+                color: "var(--color-muted)",
+                paddingBottom: "1.5rem",
+                maxWidth: "680px",
+              }}
+            >
+              {item.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
 export default function FAQ() {
-  return (
-    <section
-      id="faq"
-      className="py-24"
-      style={{ background: "linear-gradient(180deg, #06070B 0%, #080910 100%)" }}
-    >
-      <div className="mx-auto max-w-3xl px-6 lg:px-10">
-        <ScrollReveal>
-          <SectionHeader
-            label="FAQ"
-            align="left"
-            title={
-              <>
-                Questions{" "}
-                <span className="serif-accent" style={{ color: "#A78BFA" }}>worth asking.</span>
-              </>
-            }
-            body="Everything you need to know about ZK-ROSCAs and why they matter."
-          />
-        </ScrollReveal>
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
-        <div className="mt-12" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          {FAQS.map((item, i) => (
-            <ScrollReveal key={item.q} delay={(i % 3) + 1}>
-              <FAQItem item={item} index={i} />
-            </ScrollReveal>
-          ))}
+  return (
+    <section id="faq" style={{ padding: "8rem 0" }}>
+      <div className="section-wrap">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "300px 1fr",
+            gap: "6rem",
+            alignItems: "flex-start",
+          }}
+          className="faq-grid"
+        >
+          {/* Left: sticky header */}
+          <div ref={ref} style={{ position: "sticky", top: "7rem" }}>
+            <motion.p
+              className="label-mono"
+              style={{ marginBottom: "1rem" }}
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6 }}
+            >
+              &gt; FAQ
+            </motion.p>
+            <motion.h2
+              className="display-md"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.19, 1, 0.22, 1] }}
+            >
+              Common questions
+            </motion.h2>
+            <motion.p
+              style={{ fontSize: "0.9rem", lineHeight: 1.65, color: "var(--color-muted)", marginTop: "1rem" }}
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              More questions? Email{" "}
+              <a
+                href="mailto:kd@kosh.finance"
+                style={{ color: "var(--color-silver)", textDecoration: "none", borderBottom: "1px solid var(--color-border-hi)" }}
+              >
+                kd@kosh.finance
+              </a>
+            </motion.p>
+          </div>
+
+          {/* Right: accordion */}
+          <div>
+            {faqs.map((faq, i) => (
+              <FAQItem key={faq.q} item={faq} index={i} />
+            ))}
+          </div>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .faq-grid {
+            grid-template-columns: 1fr !important;
+            gap: 3rem !important;
+          }
+          .faq-grid > div:first-child {
+            position: static !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

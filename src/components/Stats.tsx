@@ -1,184 +1,161 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import ScrollReveal from "./ScrollReveal";
-import SectionHeader from "./SectionHeader";
+import { useRef, useEffect, useState } from "react";
+import { motion, useInView } from "framer-motion";
 
-const STATS = [
-  {
-    number: "$500B+",
-    label: "Annual ROSCA volume worldwide",
-    sub: "Chit funds, tandas, stokvels",
-    color: "#8B5CF6",
-    span: "col-span-2 md:col-span-1",
-  },
-  {
-    number: "$360B",
-    label: "India's informal chit fund market",
-    sub: "100× the registered sector",
-    color: "#F59E0B",
-    span: "col-span-2 md:col-span-1",
-  },
-  {
-    number: "500M+",
-    label: "People using savings circles globally",
-    sub: "Mostly informal, trust-based",
-    color: "#06B6D4",
-    span: "col-span-2",
-  },
-  {
-    number: "0",
-    label: "Privacy-preserving ROSCAs that exist",
-    sub: "We're building the first one",
-    color: "#4ADE80",
-    span: "col-span-2",
-  },
+const stats = [
+  { value: 500, suffix: "B+", prefix: "$", label: "Global ROSCA market", sub: "Annual informal savings volume" },
+  { value: 500, suffix: "M+", prefix: "", label: "People in savings circles", sub: "Across 100+ countries" },
+  { value: 360, suffix: "B+", prefix: "$", label: "India chit fund market", sub: "Largest single ROSCA market" },
+  { value: 0, suffix: "", prefix: "", label: "Private ROSCAs", sub: "Until Kosh — none existed on-chain" },
 ];
 
-function parseNumber(raw: string): { prefix: string; suffix: string; value: number } {
-  const match = raw.match(/^([^0-9]*)([0-9.]+)([^0-9]*)$/);
-  if (!match) return { prefix: "", suffix: "", value: 0 };
-  return {
-    prefix: match[1],
-    value: parseFloat(match[2]),
-    suffix: match[3],
-  };
-}
-
-function useCountUp(target: number, active: boolean, duration = 1500) {
-  const [current, setCurrent] = useState(0);
-  const rafRef = useRef<number>(0);
-
+function useCountUp(end: number, inView: boolean, duration = 1800) {
+  const [count, setCount] = useState(0);
   useEffect(() => {
-    if (!active) return;
-    const start = performance.now();
-    const step = (now: number) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // easeOutExpo
-      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      setCurrent(eased * target);
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(step);
+    if (!inView) return;
+    let start = 0;
+    const step = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
       }
-    };
-    rafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [active, target, duration]);
-
-  return current;
+    }, 16);
+    return () => clearInterval(timer);
+  }, [inView, end, duration]);
+  return count;
 }
 
-function StatCell({ stat }: { stat: typeof STATS[number] }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(false);
-  const { prefix, value, suffix } = parseNumber(stat.number);
-  const count = useCountUp(value, active);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setActive(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const displayValue = value === 0
-    ? "0"
-    : value % 1 === 0
-    ? Math.round(count).toLocaleString()
-    : count.toFixed(1);
+function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const count = useCountUp(stat.value, inView);
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className={`relative overflow-hidden p-8 ${stat.span}`}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.19, 1, 0.22, 1] }}
       style={{
-        borderLeft: `2px solid ${stat.color}`,
-        borderTop: "1px solid rgba(255,255,255,0.04)",
-        background: "#06070B",
+        padding: "2.5rem",
+        borderRight: index < stats.length - 1 ? "1px solid var(--color-border)" : "none",
+        position: "relative",
       }}
     >
-      {/* Ghost number */}
+      {/* Ghost number behind */}
       <div
-        className="num-giant absolute -right-4 -bottom-4 select-none pointer-events-none leading-none"
-        aria-hidden
         style={{
+          position: "absolute",
+          top: "0.5rem",
+          right: "1rem",
+          fontFamily: "var(--font-mono)",
+          fontSize: "6rem",
+          fontWeight: 700,
           color: "transparent",
-          WebkitTextStroke: `1px ${stat.color}08`,
-          fontSize: "clamp(4rem, 8vw, 7rem)",
-          zIndex: 0,
+          WebkitTextStroke: "1px rgba(255,255,255,0.04)",
+          lineHeight: 1,
+          userSelect: "none",
+          pointerEvents: "none",
         }}
       >
-        {stat.number.replace(/[^0-9]/g, "").slice(0, 4)}
+        {String(index + 1).padStart(2, "0")}
       </div>
 
-      <div className="relative z-10">
-        <div
-          className="font-display font-black mb-2"
-          style={{
-            fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            color: stat.color,
-          }}
-        >
-          {prefix}{displayValue}{suffix}
-        </div>
-        <p className="font-semibold mb-1 text-sm" style={{ color: "#E8E9F0" }}>
-          {stat.label}
-        </p>
-        <p className="text-xs" style={{ color: "#4B5563", fontFamily: "'JetBrains Mono', monospace" }}>
-          {stat.sub}
-        </p>
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "clamp(2rem, 4vw, 3.25rem)",
+          fontWeight: 700,
+          color: "var(--color-ink)",
+          lineHeight: 1,
+          letterSpacing: "-0.02em",
+          marginBottom: "0.75rem",
+        }}
+      >
+        {stat.prefix}{count}{stat.suffix}
       </div>
-    </div>
+      <div
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "0.9375rem",
+          fontWeight: 600,
+          color: "var(--color-text)",
+          marginBottom: "0.375rem",
+        }}
+      >
+        {stat.label}
+      </div>
+      <div className="label-mono" style={{ color: "var(--color-muted)" }}>
+        {stat.sub}
+      </div>
+    </motion.div>
   );
 }
 
 export default function Stats() {
-  return (
-    <section
-      className="py-20"
-      style={{ background: "#06070B", borderTop: "1px solid rgba(255,255,255,0.05)" }}
-    >
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <ScrollReveal>
-          <SectionHeader
-            label="The Scale"
-            title={
-              <>
-                The market is{" "}
-                <span
-                  style={{
-                    background: "linear-gradient(135deg, #8B5CF6, #06B6D4)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  <span className="serif-accent">already there.</span>
-                </span>
-                {" "}The privacy isn&apos;t.
-              </>
-            }
-          />
-        </ScrollReveal>
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
 
-        <div className="mt-12 grid grid-cols-2 border-l-0 border-t border-r border-b" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
-          {STATS.map((stat) => (
-            <StatCell key={stat.number} stat={stat} />
+  return (
+    <section style={{ padding: "6rem 0", background: "var(--color-surface)", borderTop: "1px solid var(--color-border)", borderBottom: "1px solid var(--color-border)" }}>
+      <div className="section-wrap">
+        <div ref={ref} style={{ marginBottom: "3rem" }}>
+          <motion.p
+            className="label-mono"
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            &gt; Market Context
+          </motion.p>
+          <motion.h2
+            className="display-md"
+            style={{ marginTop: "0.75rem" }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.19, 1, 0.22, 1] }}
+          >
+            The market is enormous.<br />The problem is unsolved.
+          </motion.h2>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "4px",
+            overflow: "hidden",
+          }}
+          className="stats-grid"
+        >
+          {stats.map((stat, i) => (
+            <StatCard key={stat.label} stat={stat} index={i} />
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .stats-grid > div {
+            border-right: none !important;
+            border-bottom: 1px solid var(--color-border);
+          }
+        }
+        @media (max-width: 480px) {
+          .stats-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

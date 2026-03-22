@@ -1,10 +1,9 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import Problem from "@/components/Problem";
-import Solution from "@/components/Solution";
+import Features from "@/components/Features";
+import Stats from "@/components/Stats";
 import HowItWorks from "@/components/HowItWorks";
 import WhyMidnight from "@/components/WhyMidnight";
-import Stats from "@/components/Stats";
 import FAQ from "@/components/FAQ";
 import CTAFooter from "@/components/CTAFooter";
 
@@ -14,14 +13,13 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <Problem />
-        <Solution />
+        <Stats />
+        <Features />
         <HowItWorks />
         <WhyMidnight />
-        <Stats />
         <FAQ />
-        <CTAFooter />
       </main>
+      <CTAFooter />
     </>
   );
 }
